@@ -39,9 +39,34 @@ def main_func():
 		r = requests.get(target_url)
 		#print(r.text)
 		decoded = r.json()		
-		print(json.dumps(decoded[0], indent=4))
+		#print(json.dumps(decoded[0], indent=4))
+		return decoded
 
-		return "get_job_data"
+	def compare_job_data(current, previous):
+		try:
+			with open(previous) as previous_guids:
+				prev_guid = []
+				for element in previous_guids:
+					prev_guid.append(element)
+				curr_guid = []
+				for element in current:
+					curr_guid.append(element['guid'])
+					# print(element['title'])
+				return set(curr_guid) - set(prev_guid)
+		except:
+			print("---compare_job_data failure:\n{}".format(sys.exc_info()))
+			raise
+
+	def filter_compares(guids, data, cfg):
+		title_key_words = cfg['KEYWORDS']['job_title']
+		it_jobs = []
+		for idnum in guids:
+			for dictionary in data:
+				if dictionary['guid'] == idnum:
+					job_title_words = dictionary['title'].split()
+					for word in job_title_words:
+						if word.lower() in title_key_words:
+							it_jobs.append(dictionary)
 
 	def post_job_share():
 		return "post_job_share"
@@ -51,8 +76,12 @@ def main_func():
 		return "clean_up"
 
 	# START MAIN FUNCTION HERE #
+
+	# GET JOB DATA & DETERMINE IF THERE IS ANYTHING TO POST #
 	cfg = import_configurations()
-	get_job_data()
+	data = get_job_data()
+	guids = compare_job_data(data, cfg['FILES']['guids'])
+	filter_compares(guids, data, cfg)
 
 
 

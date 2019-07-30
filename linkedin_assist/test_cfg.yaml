@@ -1,2 +1,27 @@
 URLS:
   input_jobs: https://dollarbankcareers.jobs/feed/json
+FILES:
+  guids: ./guids_record.txt
+KEYWORDS:
+  job_title:
+    - it
+    - programmer
+    - systems
+    - developer
+    - idms
+    - database
+    - cobol
+    - jcl
+    - mainframe
+    - pc
+    - network
+    - middleware
+    - desktop
+    - linux
+    - windows
+    - microsoft
+    - sharepoint
+    - application
+    - digital
+    - ibm
+    - sql
