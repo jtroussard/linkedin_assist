@@ -45,39 +45,6 @@ def main_func():
 			print("---import_configurations failure:\n{}".format(sys.exc_info()))
 		return cfg
 
-	def get_job_data():
-		target_url = cfg['URLS']['input_jobs']
-		print(target_url)
-		r = requests.get(target_url)
-		decoded = r.json()		
-		return decoded
-
-	def compare_job_data(current, previous):
-		try:
-			with open(previous) as previous_guids:
-				prev_guid = []
-				for element in previous_guids:
-					prev_guid.append(element)
-				curr_guid = []
-				for element in current:
-					curr_guid.append(element['guid'])
-				return set(curr_guid) - set(prev_guid)
-		except:
-			print("---compare_job_data failure:\n{}".format(sys.exc_info()))
-			raise
-
-	def filter_compares(guids, data, cfg):
-		title_key_words = cfg['KEYWORDS']['job_title']
-		it_jobs = []
-		for idnum in guids:
-			for dictionary in data:
-				if dictionary['guid'] == idnum:
-					job_title_words = dictionary['title'].split()
-					for word in job_title_words:
-						if word.lower() in title_key_words:
-							it_jobs.append(dictionary)
-		return(it_jobs)
-
 	def post_job_share():
 		return "post_job_share"
 
@@ -89,24 +56,19 @@ def main_func():
 
 	# GET JOB DATA & DETERMINE IF THERE IS ANYTHING TO POST #
 	cfg = import_configurations()
-	data = get_job_data()
-	guids = compare_job_data(data, cfg['FILES']['guids'])
-	it_jobs = filter_compares(guids, data, cfg)
 
-	# DISPLAY RESULTS #
-	print("\nThese are the available jobs:\n")
-	for job in it_jobs:
-		print("{}\n{}\n\n".format(job['title'], job['location']))
+	url = 'https://api.linkedin.com/v2/shares'
+	payload = {}
+	
+	headers = {'x-li-format': 'json', 'Content-Type': 'application/json'}
+	params = {'oauth2_access_token': 'YgR1ReQvjLZ6nEIW'}
+	response = requests.post(url,data=payload,params=params)
+	print(response.text)
 
-	# GET FEEDBACK #
-	u_inp = None
-	input_loop = True
-	options = ['y', 'n', 'Y', 'N']
-	while input_loop == True:
-		u_inp = input("Would you like to post these jobs? [Y/N] > ")
-		if u_inp in options:
-			input_loop = False
 
+
+
+	u_inp = 'y'
 	# MAKE CONNECTION AND SHARE POSTS #
 	if u_inp.lower() == 'y':
 		creds = get_login_creds()
