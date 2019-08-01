@@ -5,15 +5,17 @@
 __author__ = "Jacques Troussard"
 __copyright__ = "Copyright 2019, TekkSparrow"
 
-import sys, requests, yaml, json
+import sys, requests, yaml, json, os
 import pprint
 # import npyscreen
 
 # class LinkedinAssistApp(npyscreen.NPSApp):
 # 	def create(self):
 # 		F = npyscreen.Form(name = "Linkedin Assist App")
-# 		ms = F.add(npyscreen.TitleSelectOne, max_height=4, value = [1,], name="Pick One", values = ["Option1","Option2","Option3"], scroll_exit=True)
-# 		ms2= F.add(npyscreen.TitleMultiSelect, max_height =-2, value = [1,], name="Pick Several", values = ["Option1","Option2","Option3"], scroll_exit=True)
+# 		ms = F.add(npyscreen.TitleSelectOne, max_height=4, value = [1,], 
+#name="Pick One", values = ["Option1","Option2","Option3"], scroll_exit=True)
+# 		ms2= F.add(npyscreen.TitleMultiSelect, max_height =-2, value = [1,], 
+#name="Pick Several", values = ["Option1","Option2","Option3"], scroll_exit=True)
 # 		F.edit()
 
 
@@ -52,20 +54,47 @@ def main_func():
 		#close config
 		return "clean_up"
 
-	# START MAIN FUNCTION HERE #
 
-	# GET JOB DATA & DETERMINE IF THERE IS ANYTHING TO POST #
-	cfg = import_configurations()
 
-	url = 'https://api.linkedin.com/v2/shares'
-	payload = {}
+	# from http.server import HTTPServer, SimpleHTTPRequestHandler
+	# import ssl
 	
-	headers = {'x-li-format': 'json', 'Content-Type': 'application/json'}
-	params = {'oauth2_access_token': 'YgR1ReQvjLZ6nEIW'}
-	response = requests.post(url,data=payload,params=params)
-	print(response.text)
+	# httpd = HTTPServer(('localhost', 4443), SimpleHTTPRequestHandler)
+	# httpd.socket = ssl.wrap_socket(httpd.socket, certfile='cert.pem', server_side=True)
+	# httpd.serve_forever()
+	
+	os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+	from requests_oauthlib import OAuth2Session
+	from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 
+	# Credentials you get from registering a new application
+	client_id = '86c3v1xg8r15s3'
+	client_secret = 'YgR1ReQvjLZ6nEIW'
+	redirect_url = 'http://127.0.0.1'
+	# OAuth endpoints given in the LinkedIn API documentation (you can check for the latest updates)
+	authorization_base_url = 'https://www.linkedin.com/oauth/v2/authorization'
+	token_url = 'https://www.linkedin.com/oauth/v2/accessToken'
+
+	
+	# Authorized Redirect URL (from LinkedIn configuration)
+	linkedin = OAuth2Session(client_id, redirect_uri=redirect_url)
+	linkedin = linkedin_compliance_fix(linkedin)
+	
+	# Redirect user to LinkedIn for authorization
+	authorization_url, state = linkedin.authorization_url(authorization_base_url)
+	print('Please go here and authorize,', authorization_url)
+	
+	# Get the authorization verifier code from the callback url
+	redirect_response = input('Paste the full redirect URL here:')
+	
+	# Fetch the access token
+	linkedin.fetch_token(token_url,client_secret=client_secret,
+		include_client_id=True,authorization_response=redirect_response)
+	
+	# Fetch a protected resource, i.e. user profile
+	r = linkedin.get('https://api.linkedin.com/v1/people/~')
+	print(r.content)
 
 
 	u_inp = 'y'
