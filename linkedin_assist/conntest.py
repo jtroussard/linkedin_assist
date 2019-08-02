@@ -69,8 +69,8 @@ def main_func():
 	from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 
 	# Credentials you get from registering a new application
-	client_id = '86c3v1xg8r15s3'
-	client_secret = 'YgR1ReQvjLZ6nEIW'
+	client_id = None
+	client_secret = None
 	redirect_url = 'http://127.0.0.1'
 	# OAuth endpoints given in the LinkedIn API documentation (you can check for the latest updates)
 	authorization_base_url = 'https://www.linkedin.com/oauth/v2/authorization'
