@@ -1,0 +1,10 @@
+certifi==2019.6.16
+chardet==3.0.4
+idna==2.8
+npyscreen==4.10.5
+oauthlib==3.0.2
+pkg-resources==0.0.0
+PyYAML==5.1.1
+requests==2.22.0
+requests-oauthlib==1.2.0
+urllib3==1.25.3
