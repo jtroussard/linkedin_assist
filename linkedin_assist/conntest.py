@@ -18,6 +18,8 @@ import pprint
 #name="Pick Several", values = ["Option1","Option2","Option3"], scroll_exit=True)
 # 		F.edit()
 
+from dnt import vault
+
 
 
 def main_func():
@@ -69,16 +71,19 @@ def main_func():
 	from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 
 	# Credentials you get from registering a new application
-	client_id = None
-	client_secret = None
+	client_id = vault.CLIENT_ID
+	client_secret = vault.CLIENT_SECRET
+	# Scope is necessary to avoid permission errors
+	scope = ['r_liteprofile', 'r_emailaddress', 'w_member_social']
 	redirect_url = 'http://127.0.0.1'
 	# OAuth endpoints given in the LinkedIn API documentation (you can check for the latest updates)
 	authorization_base_url = 'https://www.linkedin.com/oauth/v2/authorization'
 	token_url = 'https://www.linkedin.com/oauth/v2/accessToken'
 
+
 	
 	# Authorized Redirect URL (from LinkedIn configuration)
-	linkedin = OAuth2Session(client_id, redirect_uri=redirect_url)
+	linkedin = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope)
 	linkedin = linkedin_compliance_fix(linkedin)
 	
 	# Redirect user to LinkedIn for authorization
@@ -91,9 +96,9 @@ def main_func():
 	# Fetch the access token
 	linkedin.fetch_token(token_url,client_secret=client_secret,
 		include_client_id=True,authorization_response=redirect_response)
-	
-	# Fetch a protected resource, i.e. user profile
-	r = linkedin.get('https://api.linkedin.com/v1/people/~')
+
+	headers = {'X-Restli-Protocol-Version': '2.0.0'}
+	r = linkedin.get('https://api.linkedin.com/v2/me')
 	print(r.content)
 
 
