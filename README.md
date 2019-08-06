@@ -21,10 +21,15 @@ A python program to collect job data (JSON) and paritally automate shares to you
 - [X] Get job data.
 - [X] Filter job data.
 - [ ] Store results.
-- [ ] Interface with user.
+- [X] Interface with user.
 - [X] Connect to LinkedIn.
-- [ ] Post to LinkedIn.
+- [X] Post to LinkedIn.
+- [ ] Token memory (?)
 - [ ] Clean up.
 
 ## Possible Upgrades
 - [ ] Convert to npyscreen.
+    1. Job post selection
+    2. Job post repost control (repost is still live after x many days)
+    3. Profile feature (build config file within program)
+- [ ] Web Application Version
