@@ -7,14 +7,9 @@ __copyright__ = "Copyright 2019, TekkSparrow"
 
 import sys, requests, yaml, json
 import pprint
-# import npyscreen
 
-# class LinkedinAssistApp(npyscreen.NPSApp):
-# 	def create(self):
-# 		F = npyscreen.Form(name = "Linkedin Assist App")
-# 		ms = F.add(npyscreen.TitleSelectOne, max_height=4, value = [1,], name="Pick One", values = ["Option1","Option2","Option3"], scroll_exit=True)
-# 		ms2= F.add(npyscreen.TitleMultiSelect, max_height =-2, value = [1,], name="Pick Several", values = ["Option1","Option2","Option3"], scroll_exit=True)
-# 		F.edit()
+from dnt import vault
+from classes.LinkedinAssist import LinkedinAssist
 
 
 
@@ -109,9 +104,14 @@ def main_func():
 
 	# MAKE CONNECTION AND SHARE POSTS #
 	if u_inp.lower() == 'y':
-		creds = get_login_creds()
-		token = get_linkedin_token(creds)
-		if post_job_share():
+		linkedin_assist_obj = LinkedinAssist(cfg)
+		if linkedin_assist_obj.make_connection():
+			user_url = cfg['URLS']['li_api_get_user_profile']
+			print(type(user_url))
+			urn = linkedin_assist_obj.get_urn(user_url)
+		else:
+			sys.exit("Connection to Linkedin API could NOT be made. Exiting program.")
+		if linkedin_assist_obj.make_posts(linkedin_assist_obj.form_posts(it_jobs, urn)):
 			print("Posting successful")
 		else:
 			print("Something went wrong.")
@@ -119,12 +119,7 @@ def main_func():
 		print("No shares made to LinkedIn. Shutting program down. Thank you.")
 	clean_up()
 
-
-
-# next version convert to npyscreen terminal app
 if __name__ == '__main__':
-	# App = TestApp()
-	# App.run()
 	try:
 		main_func()
 	except:

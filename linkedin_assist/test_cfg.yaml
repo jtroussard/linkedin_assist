@@ -1,5 +1,10 @@
 URLS:
   input_jobs: https://dollarbankcareers.jobs/feed/json
+  li_api_get_user_profile: https://api.linkedin.com/v2/me
+  li_api_auth_base: https://www.linkedin.com/oauth/v2/authorization
+  li_api_token: https://www.linkedin.com/oauth/v2/accessToken
+  li_api_redirect: http://127.0.0.1
+
 FILES:
   guids: ./guids_record.txt
 KEYWORDS:
