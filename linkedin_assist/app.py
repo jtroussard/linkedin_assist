@@ -11,20 +11,19 @@ import pprint
 from dnt import vault
 from classes.LinkedinAssist import LinkedinAssist
 
-
-
 def main_func():
 
-	cfg = None
-
-	def get_login_creds():
-		
-		return "get_login_creds"
-
-	def get_linkedin_token(credentials):
-		return "get_linkedin_token"
+	config = None
 
 	def import_configurations():
+	"""
+	Summary: Opens and load configuration file. Configuration file/location is passed to program
+	when exec in terminal. Missing, invalid, unsuccessful open processes lead to program exit.
+	Configuration file scntains API links, keyword terms, etc. Any data deemed 	variable or might
+	change in the future due to versioning from LI API.
+
+	:return: yaml file of configuration options and data.
+	note:: argument should be unix style file path"""
 		if len(sys.argv) < 2:
 			sys.exit("Configuration file not specified. Exiting program.")
 		else:
@@ -35,13 +34,13 @@ def main_func():
 		try:
 			config_file = str(sys.argv[1])
 			with open(config_file, 'r') as ymlfile:
-				cfg = yaml.load(ymlfile, Loader=Loader)
+				config = yaml.load(ymlfile, Loader=Loader)
 		except:
 			print("---import_configurations failure:\n{}".format(sys.exc_info()))
-		return cfg
+		return config
 
 	def get_job_data():
-		target_url = cfg['URLS']['input_jobs']
+		target_url = config['URLS']['input_jobs']
 		r = requests.get(target_url)
 		decoded = r.json()		
 		return decoded
@@ -60,8 +59,8 @@ def main_func():
 			print("---compare_job_data failure:\n{}".format(sys.exc_info()))
 			raise
 
-	def filter_compares(guids, data, cfg):
-		title_key_words = cfg['KEYWORDS']['job_title']
+	def filter_compares(guids, data, config):
+		title_key_words = config['KEYWORDS']['job_title']
 		it_jobs = []
 		for idnum in guids:
 			for dictionary in data:
@@ -72,22 +71,25 @@ def main_func():
 							it_jobs.append(dictionary)
 		return(it_jobs)
 
-	def post_job_share():
-		return "post_job_share"
-
 	def clean_up():
 		#close config
 		return "clean_up"
 
-	# START MAIN FUNCTION HERE #
+	
 
-	# GET JOB DATA & DETERMINE IF THERE IS ANYTHING TO POST #
-	cfg = import_configurations()
+	#START#
+
+	# Get configurations and load into local variable.
+	config = import_configurations()
+
+	# Fetch JSON format job posting data.
 	data = get_job_data()
-	guids = compare_job_data(data, cfg['FILES']['guids'])
-	it_jobs = filter_compares(guids, data, cfg)
 
-	# DISPLAY RESULTS #
+	# Compare current data with previous pulls.
+	guids = compare_job_data(data, config['FILES']['guids'])
+	it_jobs = filter_compares(guids, data, config)
+
+	# Interface with user.
 	print("\nThese are the available jobs:\n")
 	for job in it_jobs:
 		print("{}\n{}\n\n".format(job['title'], job['location']))
@@ -103,9 +105,9 @@ def main_func():
 
 	# MAKE CONNECTION AND SHARE POSTS #
 	if u_inp.lower() == 'y':
-		linkedin_assist_obj = LinkedinAssist(cfg)
+		linkedin_assist_obj = LinkedinAssist(config)
 		if linkedin_assist_obj.make_connection():
-			user_url = cfg['URLS']['li_api_get_user_profile']
+			user_url = config['URLS']['li_api_get_user_profile']
 			print(type(user_url))
 			urn = linkedin_assist_obj.get_urn(user_url)
 		else:
