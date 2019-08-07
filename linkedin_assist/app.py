@@ -42,7 +42,6 @@ def main_func():
 
 	def get_job_data():
 		target_url = cfg['URLS']['input_jobs']
-		print(target_url)
 		r = requests.get(target_url)
 		decoded = r.json()		
 		return decoded
