@@ -16,14 +16,15 @@ def main_func():
 	config = None
 
 	def import_configurations():
-	"""
-	Summary: Opens and load configuration file. Configuration file/location is passed to program
-	when exec in terminal. Missing, invalid, unsuccessful open processes lead to program exit.
-	Configuration file scntains API links, keyword terms, etc. Any data deemed 	variable or might
-	change in the future due to versioning from LI API.
+		"""
+		Summary: Opens and load configuration file. Configuration file/location is passed to program
+		when exec in terminal. Missing, invalid, unsuccessful open processes lead to program exit.
+		Configuration file scntains API links, keyword terms, etc. Any data deemed 	variable or might
+		change in the future due to versioning from LI API.
 
-	:return: yaml file of configuration options and data.
-	note:: argument should be unix style file path"""
+		:return: yaml file of configuration options and data.
+		note:: argument should be unix style file path
+		"""
 		if len(sys.argv) < 2:
 			sys.exit("Configuration file not specified. Exiting program.")
 		else:
@@ -82,17 +83,46 @@ def main_func():
 	# Get configurations and load into local variable.
 	config = import_configurations()
 
-	# Fetch JSON format job posting data.
+	# Fetch JSON format job posting data. Store current data to guid file.
 	data = get_job_data()
+
+	try:
+		with open(config['FILES']['guids'],'r') as inp, open(config['FILES']['guids'],'a') as new, open('./testout.txt', 'w') as out:
+			past_guids_data = inp.readlines()
+			past_guids_data.pop(0) #remove header
+			temp_list = []
+			for x in past_guids_data:
+				temp_list.append(x.split(','))
+
+			found = False
+			for i in data:
+				for j in temp_list:
+					print("{} = {}".format(i['guid'], j[0]))
+					if i['guid'] == j[0]:
+						found = True
+						break
+				if not found:
+					add_to_history = True
+					new.write("{},{},{},{}\n".format(i['guid'],i['date_new'],0,'active'))
+				found = False
+
+	except:
+		print("FILE error:\n{}".format(sys.exc_info()))
+		raise
 
 	# Compare current data with previous pulls.
 	guids = compare_job_data(data, config['FILES']['guids'])
+	print(guids)
+	sys.exit()
 	it_jobs = filter_compares(guids, data, config)
 
 	# Interface with user.
 	print("\nThese are the available jobs:\n")
 	for job in it_jobs:
 		print("{}\n{}\n\n".format(job['title'], job['location']))
+
+	# GUID Analysis
+
 
 	# GET FEEDBACK #
 	u_inp = None
