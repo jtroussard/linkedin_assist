@@ -86,8 +86,9 @@ def main_func():
 	# Fetch JSON format job posting data. Store current data to guid file.
 	data = get_job_data()
 
+	# this looks to be working ok, create a sep func and move after IT filter 
 	try:
-		with open(config['FILES']['guids'],'r') as inp, open(config['FILES']['guids'],'a') as new, open('./testout.txt', 'w') as out:
+		with open(config['FILES']['guids'],'r') as inp, open(config['FILES']['guids'],'a') as new:
 			past_guids_data = inp.readlines()
 			past_guids_data.pop(0) #remove header
 			temp_list = []
@@ -97,7 +98,6 @@ def main_func():
 			found = False
 			for i in data:
 				for j in temp_list:
-					print("{} = {}".format(i['guid'], j[0]))
 					if i['guid'] == j[0]:
 						found = True
 						break
@@ -112,8 +112,6 @@ def main_func():
 
 	# Compare current data with previous pulls.
 	guids = compare_job_data(data, config['FILES']['guids'])
-	print(guids)
-	sys.exit()
 	it_jobs = filter_compares(guids, data, config)
 
 	# Interface with user.
