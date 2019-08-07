@@ -106,7 +106,7 @@ class LinkedinAssist():
                 }
             },
             "visibility": {
-                "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
+                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
                 }
             }
             req_data.append(json.dumps(p))
