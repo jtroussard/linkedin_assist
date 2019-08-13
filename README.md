@@ -18,12 +18,12 @@ A python program to collect job data (JSON) and paritally automate shares to you
 
 ## Progress
 - [X] YOLO code.
-- [X] Get job data.
-- [X] Filter job data.
+- [ ] Get job data.
+- [ ] Filter job data.
 - [ ] Store results.
-- [X] Interface with user.
-- [X] Connect to LinkedIn.
-- [X] Post to LinkedIn.
+- [ ] Interface with user.
+- [ ] Connect to LinkedIn.
+- [ ] Post to LinkedIn.
 - [ ] Token memory (?)
 - [ ] Clean up.
 
