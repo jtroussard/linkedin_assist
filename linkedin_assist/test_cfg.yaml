@@ -11,7 +11,7 @@ LIMITS:
   post_count: 100
 FILES:
   data: ./jobs.json
-  records: ./records.csv
+  records: ./records.json
   saved_guids: ./saved_guids.txt
 KEYWORDS:
   job_title:

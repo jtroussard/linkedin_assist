@@ -11,6 +11,10 @@ import pprint
 from dnt import vault
 from classes.LinkedinAssist import LinkedinAssist
 
+import datetime as dt
+
+today = dt.datetime.today()
+
 def main_func():
 
 	config = None
@@ -39,6 +43,7 @@ def main_func():
 		except:
 			print("---import_configurations failure:\n{}".format(sys.exc_info()))
 		return config
+
 
 	def get_job_data(target_url):
 		"""This function will get the initial job opportunity data. The url is determined by the
@@ -74,7 +79,7 @@ def main_func():
 				if word.lower() in keywords:
 					it_jobs.append(element)
 					break
-		return(it_jobs)
+		return(it_jobs) 
 
 	def compare_and_keep(current, saved_file_name):
 		keep = []
@@ -162,24 +167,29 @@ def main_func():
 			raise
 
 	def make_suggestions(keepers, data, inp, config):
-		import datetime as dt
-		today = dt.datetime.today()
 		sugs = []
-
+		lim_age = dt.timedelta(days=config['LIMITS']['post_age'])
 		try:
-			with open(inp, 'r') as records:
+			with open(inp, 'r') as r:
+				records = json.load(r)
 				for guid in keepers:
-					for r in records:
-						rec = json.loads(r)
+					guid_used = False
+					for rec in records:
 						if guid == rec['guid']:
-							datetime_object = dt.datetime.strptime(rec['date_new'], '%Y-%m-%d')
-							lim_age = dt.timedelta(days=config['LIMITS']['post_age'])
-							if (today - datetime_object < lim_age) or (sline[2] < config['LIMITS']['post_count']):
+							datetime_object = dt.datetime.strptime(rec['last_post'], '%Y-%m-%d')
+							diff = today-datetime_object
+							# print("today {} ---- datetime_object {}    diff {}".format(today, datetime_object, diff.days))
+							if ( diff < lim_age) or (rec['counter'] > config['LIMITS']['post_count']):
+								print("{} broke config limits. Not suggesting.")
+							else:
 								sugs.append(guid)
+							guid_used = True
+							break
+					if not guid_used:
+						sugs.append(guid)
 		except:
 			print("error:{}".format(sys.exc_info()))
 			raise
-		sys.exit()
 		return sugs
 
 	#START#
@@ -197,8 +207,7 @@ def main_func():
 	keep_remove = compare_and_keep(it_jobs, config['FILES']['saved_guids'])
 
 	# Create a list of GUIDS from which the user can choose from.
-	suggestions = make_suggestions(keep_remove['keep'], it_jobs, config['FILES']['records'], config)
-	
+	suggestions = make_suggestions(keep_remove['keep'], it_jobs, config['FILES']['records'], config)	
 
 	#leaving off here we have a list of GUIDS to suggest in SUGS 
 
@@ -210,58 +219,26 @@ def main_func():
 	#        and return a code, if a posting failure occurs, record in a fast and dirty log
 	#        and try to continue... another upgrade will be a real log library.
 
-
-
-
-
-
-
-	# this looks to be working ok, create a sep func and move after IT filter 
-	try:
-		with open(config['FILES']['data'],'r') as inp, open(config['FILES']['data'],'a') as new:
-			past_guids_data = inp.readlines()
-			past_guids_data.pop(0) #remove header
-			temp_list = []
-			for x in past_guids_data:
-				temp_list.append(x.split(','))
-
-			found = False
-			for i in data:
-				for j in temp_list:
-					if i['guid'] == j[0]:
-						found = True
-						break
-				if not found:
-					add_to_history = True
-					new.write("{},{},{},{}\n".format(i['guid'],i['date_new'],0,'active'))
-				found = False
-
-	except:
-		print("FILE error:\n{}".format(sys.exc_info()))
-		raise
-
-	# Compare current data with previous pulls.
-	guids = compare_job_data(data, config['FILES']['data'])
-	it_jobs = filter_data(guids, data, config)
-
 	# Interface with user.
-	print("\nThese are the available jobs:\n")
-	for job in it_jobs:
-		print("{}\n{}\n\n".format(job['title'], job['location']))
+	if len(suggestions) == 0:
+		print("Nothing to post for now. Check back again soon. Bye!")
+		sys.exit()
+	else:
+		print("\nThese are the available jobs:\n")
+		for job in it_jobs:
+			if job['guid'] in suggestions:
+				print("{}\n{}\n\n".format(job['title'], job['location']))
 
-	# GUID Analysis
-
-
-	# GET FEEDBACK #
+	# Get feedback from user.
 	u_inp = None
 	input_loop = True
-	options = ['y', 'n', 'Y', 'N']
+	options = ['y', 'n', 'yes', 'no']
 	while input_loop == True:
-		u_inp = input("Would you like to post these jobs? [Y/N] > ")
-		if u_inp in options:
+		u_inp = input("\nWould you like to post these jobs?\nY - Yes\nN - No\n> ")
+		if u_inp.lower() in options:
 			input_loop = False
 
-	# MAKE CONNECTION AND SHARE POSTS #
+	# Read user feedback and exec as required.
 	if u_inp.lower() == 'y':
 		linkedin_assist_obj = LinkedinAssist(config)
 		if linkedin_assist_obj.make_connection():
@@ -269,13 +246,38 @@ def main_func():
 			urn = linkedin_assist_obj.get_urn(user_url)
 		else:
 			sys.exit("Connection to Linkedin API could NOT be made. Exiting program.")
-		if linkedin_assist_obj.make_posts(linkedin_assist_obj.form_posts(it_jobs, urn)):
-			print("Posting successful")
-		else:
-			print("Something went wrong.")
+		try:
+			with open(config['FILES']['records'], "r+") as f:
+				data = json.load(f)
+				for job in it_jobs:
+					if job['guid'] in suggestions:
+						post = linkedin_assist_obj.form_post(job, urn)
+						if linkedin_assist_obj.make_posts(post):
+							print("Posting successful for . . . . . {}".format(job['title']))
+							ele_found = False
+							for element in data:
+								if element['guid'] == job['guid']:
+									element['counter'] += 1
+									element['last_post'] = str(today)[:10]
+									ele_found = True
+									f.seek(0)
+									json.dump(data, f, indent=2)
+									f.truncate()
+							if not ele_found:
+								data.append({
+									"guid": job['guid'],
+									"last_post": str(today)[:10],
+									"counter": 1})
+								f.seek(0)
+								json.dump(data, f, indent=2)
+								f.truncate()
+						else:
+							print("Something went wrong with  . . . {}".format(job['title']))
+		except:
+			print("Error:{}".format(sys.exc_info()))
 	else:
 		print("No shares made to LinkedIn. Shutting program down. Thank you.")
-	clean_up()
+	#clean_up()
 
 if __name__ == '__main__':
 	try:
