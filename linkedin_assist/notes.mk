@@ -1,0 +1,8 @@
+# Notes
+
+## app.py
+
+### Functions
+
+1. get_job_data
+  - Consider checking for empty return or checking response status. Function can return a dictionary with go/nogo indicator and possible payload.
