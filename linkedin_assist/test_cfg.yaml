@@ -13,6 +13,13 @@ FILES:
   data: ./jobs.json
   records: ./records.json
   saved_guids: ./saved_guids.txt
+UI:
+  feedback_options:
+    global_accept:
+      - y
+      - n
+      - yes
+      - no
 KEYWORDS:
   job_title:
     - it
