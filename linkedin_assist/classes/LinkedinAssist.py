@@ -1,10 +1,14 @@
 from quick_fixes.oauth2_session import OAuth2Session
 from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
-
-from dnt import vault
 from time import sleep
 
 import os, json
+
+class Vault:
+    def __init__(self, config):
+        self.config = config
+        self.CLIENT_ID = config['KEYS']['client_id']
+        self.CLIENT_SECRET = config['KEYS']['client_secret']
 
 class LinkedinAssist():
     """Creates a very manual type connection to LinkedIn API,
@@ -21,6 +25,10 @@ class LinkedinAssist():
         self.job_data = job_data
         self.session = session
         self.config = config
+        if config['RUN_TYPE'] == 'DEVELOPMENT':
+            from dnt import vault
+        else:
+            vault = Vault(config)
 
     def make_connection(self):
         """Have the user authenticate."""

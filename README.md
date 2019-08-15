@@ -16,20 +16,12 @@ A python program to collect job data (JSON) and paritally automate shares to you
 
 ## Options
 
-## Progress
+## Progress (Version 1.0)
 - [X] YOLO code.
-- [ ] Get job data.
-- [ ] Filter job data.
-- [ ] Store results.
-- [ ] Interface with user.
-- [ ] Connect to LinkedIn.
-- [ ] Post to LinkedIn.
-- [ ] Token memory (?)
-- [ ] Clean up.
+- [X] Modularize.
+- [ ] Add selection feature & NpyScreen.
+- [ ] Test and verify entire program.
+- [ ] Create documentation.
 
 ## Possible Upgrades
-- [ ] Convert to npyscreen.
-    1. Job post selection
-    2. Job post repost control (repost is still live after x many days)
-    3. Profile feature (build config file within program)
-- [ ] Web Application Version
+- Web Application Version

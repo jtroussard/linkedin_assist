@@ -198,6 +198,7 @@ def make_suggestions(keepers, data, inp, limits):
 	return sugs
 
 def get_user_feedback(options):
+	reply = {}
 	u_inp = input("\nWould you like to post these jobs?\nY - Yes\nN - No\n> ")
 	if u_inp.lower() in options:
 		reply['control'] = False

@@ -1,4 +1,7 @@
-RUN_TYPE: DEVELOPMENT
+RUN_TYPE: PRODUCTION
+KEYS:
+  client_id: something
+  client_secret: somethingelse
 URLS:
   target_url: https://dollarbankcareers.jobs/feed/json
   li_api_get_user_profile: https://api.linkedin.com/v2/me
