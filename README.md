@@ -25,3 +25,4 @@ A python program to collect job data (JSON) and paritally automate shares to you
 
 ## Possible Upgrades
 - Web Application Version
+- Picture generator
