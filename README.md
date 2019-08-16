@@ -2,10 +2,10 @@ linkedin_assist Terminal Application
 ==================
 
 ## Purpose
-A python program to collect job data (JSON) and paritally automate shares to your LinkedIn account. For this version, job data is sourced from the career website of [Dollar Bank FSB](https://dollarbankcareers.dejobs.org/). Maybe even earn that sweet sweet referal bonus :moneybag:
+A python program to collect job data and paritally automate shares to your LinkedIn account. For this version, job data is sourced from the career website of [Dollar Bank FSB](https://dollarbankcareers.dejobs.org/). Maybe even earn that sweet sweet referal bonus :moneybag:
 > **Important Note:**
-> This is **NOT a production quality program** and does not adhere to best practices/security recommendation from LinkedIn or the contributers of Requests (python library).
-> This is a toy program to experiment with LinkedIn API and is to be **RUN LOCALLY ONLY**. Do not host this publicily without considering security and vulnerabilities.
+> This is **NOT a production quality program** and does not adhere to best practices/security recommendations from LinkedIn or the maintainers of Requests HTTP library for Python.
+> This is a toy program to experiment with LinkedIn API, application designs, and project structure. It is intended to be **RUN LOCALLY ONLY**. Do not host this publicily without considering security and vulnerabilities to end users.
 
 
 ## Installation
@@ -24,4 +24,8 @@ A python program to collect job data (JSON) and paritally automate shares to you
 - [ ] Create documentation.
 
 ## Possible Upgrades
-- Web Application Version
+- Web Application Version.
+- Track and offer statistical analysis on posts made.
+- Presistent Token (?)
+- Variable post message formats.
+- Determine and add collection of hashtags to posts.
