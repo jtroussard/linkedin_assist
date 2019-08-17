@@ -40,3 +40,4 @@ if "&access_token=" in url:
 - Presistent Token (?)
 - Variable post message formats.
 - Determine and add collection of hashtags to posts.
+- Browser preference selection or perhaps autodetection feature.
