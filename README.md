@@ -17,6 +17,8 @@ A python program to collect job data and paritally automate shares to your Linke
 ## Programming Notes
 1. Modified OAuth2 Requests library: Under linkedin_assist/linkedin_assist/quick_fixes/ is a modified copy of the oauth2_session.py module. Changes to this module in particular were necessary to line up requests made to LinkedIn's API. Specifically the athentication code gets appended to the request twice, once as "oauth2_access_token" and again as "access_token". When making the request with both parameters the response would indicate unpremitted fields. The only solution I could come up with involved a quick and dirty if statement that checked the url value for the second access_token field, if present it reverts the string to an older version of the url before `.add_token()` method is called. This is all done within the `request()` method. (See code block below) I've made comments on the requests github repo with regards to this issue and recieved no reply. After reviewing the Requests main page, there was a notice that exaplined the library was in maintenance mode only and the contributors/maintainers/developers were engaged with a Requests 3 rollout.
 
+2. Npyscreen canceled. I'm sure this is a great library, but personally the documentation left a lot to be desired. I was wondering around the docs for a few hours, tinkering with a few things here and there and decided that I'd have to spend absolutly way to much time learning that specific library to get of value going. Ultimately the wdiget classes seemed to be missing lots of interfacing instructions. Also I noticed that passing arbitraty arguments to the add_widget method didn't seem to bother the program at all. I would think at least soem sort of warning would be thrown. Anyways a little more reading online and I found a more straight forward library, PyInquirer. Without really going into to deep I have a simple selector menu done and might come back and do more with this UI and library.
+
 ```python
 old_version_url = url
 url, headers, data = self._client.add_token(url, http_method=method, body=data, headers=headers)
@@ -29,7 +31,7 @@ if "&access_token=" in url:
 ## Progress (Version 1.0)
 - [X] YOLO code.
 - [X] Modularize.
-- [ ] Add selection feature & NpyScreen.
+- [X] Add selection feature --NpyScreen-- PyInquirer
 - [ ] Test and verify entire program.
 - [ ] Create documentation.
 
