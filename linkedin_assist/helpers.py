@@ -94,9 +94,6 @@ def compare_and_keep(current, saved_file_name):
 	except IOError:
 		print("File not found or path is incorrect:{}\n{}".format(saved_file_name, sys.exc_info()))
 		raise
-	print(keep)
-	print('------')
-	print(sg_list)
 	try:
 		with open(saved_file_name, 'a') as saved_guids:
 			for guid in keep:
@@ -207,22 +204,27 @@ def get_user_feedback(options):
 	reply['value'] = u_inp
 	return reply
 
-def update_records(data):
+def update_records(file, records, job, date):
 	ele_found = False
-	for element in data:
+	for element in records:
 		if element['guid'] == job['guid']:
 			element['counter'] += 1
-			element['last_post'] = str(today)[:10]
+			element['last_post'] = str(date)[:10]
 			ele_found = True
-			f.seek(0)
-			json.dump(data, f, indent=2)
-			f.truncate()
+			file.seek(0)
+			json.dump(records, file, indent=2)
+			file.truncate()
 	if not ele_found:
-		data.append({
+		records.append({
 			"guid": job['guid'],
-			"last_post": str(today)[:10],
+			"last_post": str(date)[:10],
 			"counter": 1})
-		f.seek(0)
-		json.dump(data, f, indent=2)
-		f.truncate()
+		file.seek(0)
+		json.dump(records, file, indent=2)
+		file.truncate()
 	return True
+
+def search(guid, alist):
+	for g in alist:
+		if g['guid'] == guid:
+			return g

@@ -5,11 +5,9 @@
 __author__ = "Jacques Troussard"
 __copyright__ = "Copyright 2019, TekkSparrow"
 
-import sys, requests
-import pprint
+import sys, requests, selector, json
 
 from classes.LinkedinAssist import LinkedinAssist
-from dnt import vault
 
 import helpers as hs
 import datetime as dt
@@ -29,7 +27,6 @@ def main_func():
 	FN_SAVED_GUIDS      = config['FILES']['saved_guids']
 	FN_RECORDS          = config['FILES']['records']
 	LIMITS              = config['LIMITS']
-	UI_FO_GLOBAL_ACCEPT = config['UI']['feedback_options']['global_accept']
 	API_URL_GET_USER    = config['URLS']['li_api_get_user_profile']
 
 
@@ -48,23 +45,16 @@ def main_func():
 
 	# Interface with user.
 	if len(suggestions) == 0:
-		print("Nothing to post for now. Check back again soon. Bye!")
+		print("Nothing to post for now. Check back again soon. Exiting program.")
 		sys.exit()
 	else:
-		print("\nThese are the available jobs:\n")
+		job_list_json = []
 		for job in it_jobs:
 			if job['guid'] in suggestions:
-				print("{}\n{}\n\n".format(job['title'], job['location']))
+				job_list_json.append(job)
+		user_selections = selector.present_menu(job_list_json)
 
-	# Get feedback from user.
-	input_loop = True
-	reply = {}
-	while input_loop == True:
-		reply = hs.get_user_feedback(UI_FO_GLOBAL_ACCEPT)
-		input_loop = reply['control']
-
-	# Read user feedback and perform necessary action.
-	if reply['value'].lower() == 'y':
+	if user_selections:
 		linkedin_assist_obj = LinkedinAssist(config) # <-- Basically a modified OAuth2 Request Object
 		
 		try: # Get Authenticated
@@ -76,21 +66,21 @@ def main_func():
 			pass
 		
 		try: # POST request to LinkedIn & updating records
-			with open(FN_RECORDS, "r+") as f:
-				data = json.load(f)
-				for job in it_jobs:
-					if job['guid'] in suggestions:
-						post = linkedin_assist_obj.form_post(job, urn)
-						if linkedin_assist_obj.make_posts(post):
-							print("Posting successful for . . . . . {}".format(job['title']))
-							hs.update_records(data)
-						else:
-							print("Something went wrong with  . . . {}".format(job['title']))
+			with open(FN_RECORDS, "r+") as r:
+				records = json.load(r)
+				for selection in user_selections['posts']:
+					job = hs.search(selection.split(':')[1].strip(), job_list_json)
+					post = linkedin_assist_obj.form_post(job, urn)
+					if linkedin_assist_obj.make_posts(post):
+						print("Posting successful for . . . . . {}".format(job['title']))
+						hs.update_records(r, records, job, today)
+					else:
+						print("Something went wrong with  . . . {}".format(job['title']))
 		except:
 			print("Error:{}".format(sys.exc_info()))
 			raise
 	else:
-		print("No shares made to LinkedIn. Shutting program down. Thank you.")
+		print("No shares made to LinkedIn. Exiting Program.")
 	#clean_up() <-- Maybe create a clean up step in the future.
 
 if __name__ == '__main__':

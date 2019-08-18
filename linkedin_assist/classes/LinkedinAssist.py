@@ -2,7 +2,7 @@ from quick_fixes.oauth2_session import OAuth2Session
 from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 from time import sleep
 
-import os, json
+import os, json, yaml
 
 class Vault:
     def __init__(self, config):
@@ -26,9 +26,20 @@ class LinkedinAssist():
         self.session = session
         self.config = config
         if config['RUN_TYPE'] == 'DEVELOPMENT':
-            from dnt import vault
+            try:
+                from yaml import Cloader as Loader, CDumper as Dumper
+            except ImportError:
+                from yaml import Loader, Dumper
+            try:
+                with open(config['FILES']['dev_vault'], 'r') as dev_keys:
+                    v = yaml.load(dev_keys, Loader=Loader)
+                    self.vault = Vault(v)
+
+            except IOError:
+                print("Error loading development keys: {}")
+                raise
         else:
-            vault = Vault(config)
+            self.vault = Vault(config)
 
     def make_connection(self):
         """Have the user authenticate."""
@@ -44,8 +55,8 @@ class LinkedinAssist():
         from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 
         # Credentials you get from registering a new application
-        client_id = vault.CLIENT_ID
-        client_secret = vault.CLIENT_SECRET
+        client_id = self.vault.CLIENT_ID
+        client_secret = self.vault.CLIENT_SECRET
 
         # Scope is necessary to avoid permission errors
         scope = ['r_liteprofile', 'w_member_social']
