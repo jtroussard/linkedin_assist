@@ -5,7 +5,7 @@
 __author__ = "Jacques Troussard"
 __copyright__ = "Copyright 2019, TekkSparrow"
 
-import yaml, requests, json
+import yaml, requests, json, sys
 import datetime as dt
 
 def import_configurations(cl_args):
@@ -23,6 +23,7 @@ def import_configurations(cl_args):
 		print("Configuration file not specified. Exiting program.")
 		return None
 	else:
+		config = None
 		try:
 			from yaml import Cloader as Loader, CDumper as Dumper
 		except ImportError:
@@ -33,6 +34,7 @@ def import_configurations(cl_args):
 			config = yaml.load(ymlfile, Loader=Loader)
 	except:
 		print("Error:{}".format(sys.exc_info()))
+		raise
 	return config
 
 
@@ -182,7 +184,8 @@ def make_suggestions(keepers, data, inp, limits):
 						diff = today-datetime_object
 						# print("today {} ---- datetime_object {}    diff {}".format(today, datetime_object, diff.days))
 						if ( diff < lim_age) or (rec['counter'] > limits['post_count']):
-							print("{} broke config limits. Not suggesting.".format(rec['guid']))
+							# print("{} broke config limits. Not suggesting.".format(rec['guid']))
+							pass
 						else:
 							sugs.append(guid)
 						guid_used = True

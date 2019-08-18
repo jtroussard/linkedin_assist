@@ -1,7 +1,7 @@
 RUN_TYPE: DEVELOPMENT
 KEYS:
-  client_id: something
-  client_secret: somethingelse
+  client_id: get-this-from-linkedin
+  client_secret: get-this-from-linkedin
 URLS:
   target_url: https://dollarbankcareers.jobs/feed/json
   li_api_get_user_profile: https://api.linkedin.com/v2/me
@@ -13,9 +13,9 @@ LIMITS:
   post_age: 14
   post_count: 100
 FILES:
-  data: ./jobs.json
-  records: ./records.json
-  saved_guids: ./saved_guids.txt
+  data: ./data/jobs.json
+  records: ./data/records.json
+  saved_guids: ./data/saved_guids.txt
   dev_vault: ./dnt/vault.yaml
 KEYWORDS:
   job_title:
