@@ -43,3 +43,4 @@ if "&access_token=" in url:
 - Variable post message formats.
 - Determine and add collection of hashtags to posts.
 - Browser preference selection or perhaps autodetection feature.
+- Embed SQLite, drop files all together.
