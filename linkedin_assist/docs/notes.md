@@ -10,6 +10,8 @@
 
 4. Also read up on sys.exit() and find a graceful way to shut down program when there is nothing to post of user quits program.
 
+5. Wrap up version 1 asap and then do a arch restructure of the program where the job data remains intact and passed through the program instead of building all these lists. Update records using the intact data via the use of sub functions i.e. hs.search(x,x,x,x,type of search, etc...)
+
 ## app.py
 
 ### Main
