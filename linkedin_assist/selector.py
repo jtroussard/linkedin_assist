@@ -21,7 +21,7 @@ def present_menu(suggestions):
             'message': 'Select which jobs to share on LinkedIn:',
             'name': 'posts',
             'choices': [],
-            'validate': lambda answer: 'You must choose at least one topping.' \
+            'validate': lambda answer: 'You must choose at least one option.' \
                 if len(answer) == 0 else True
         }
     ]
