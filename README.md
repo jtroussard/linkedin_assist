@@ -44,3 +44,4 @@ if "&access_token=" in url:
 - Determine and add collection of hashtags to posts.
 - Browser preference selection or perhaps autodetection feature.
 - Embed SQLite, drop files all together.
+- Build out LinkedIn class into my own vanilla lib.
