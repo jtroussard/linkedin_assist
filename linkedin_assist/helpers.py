@@ -75,6 +75,14 @@ def filter_data(data, keywords):
 	return(it_jobs) 
 
 def compare_and_keep(current, saved_file_name):
+	"""Determines if GUIDS have been recorded before and whether they are still active.
+	Separates each, (keep/remove) into two lists returned as a dictionary.
+
+	:param current: List of guids from current run (active openings)
+	:param saved_file-name: file name of saved_guids. Saved GUIDS represent past GUIDS which were known
+	to be active since the last run of this program.
+	:returns: dict of guids to keep and remove. {'keep':keep,'remove':remove}
+	"""	
 	keep = []
 	remove = []
 	curr_guids = []
@@ -84,6 +92,8 @@ def compare_and_keep(current, saved_file_name):
 		curr_guids.append(d['guid'])
 	try:
 		with open(saved_file_name, 'r') as saved_guids:
+			# Loop through old GUIDS, if they exist in the current list they are still active.
+			# otherwise add them to the remove list.
 			for og in saved_guids:
 				sg_list.append(og.strip()) # used to update saved_guids list
 				if og in curr_guids:
@@ -115,59 +125,6 @@ def load_records(records_filename):
 	except:
 		print("Error:{}".format(sys.exc_info()))
 	return records_list
-
-def compare_job_data(current, previous_file):
-	"""This function will compare the job inputs from the last run to the current run.
-	This allows the program to determine if there are any new posts. Then this function
-	will also rebuilb the 'previous' file in preparation for the next run.
-
-	:param current: Data from current run.
-	:type current: list. -- of dict objects.
-	:param previous_file: Path to previous file.
-	:type current: str.
-	:returns: dict object containing the new and old guids.
-	"""
-	new_file_name = previous_file
-	try:
-		# Load the old records into the buffer list for writing to new file.
-		new_file_contents = []
-		old_guids = []
-		with open(previous_file, 'r') as encoded_inp:
-			inp = json.load(encoded_inp)
-			for entry in inp:
-				new_file_contents.append(entry)
-				old_guids.append(entry['guid'])
-
-		# Create and compare two sets. One of previous runs guids and todays.
-		# The difference should represent the newest guids.
-		previous_guids = []
-		current_guids = []
-		with open(previous_file, 'r') as encoded_inp:
-			inp = json.load(encoded_inp)
-			for entry in inp:
-				previous_guids.append(entry['guid'])
-			for entry in current:
-				current_guids.append(entry['guid'])
-		diff_guids = set(previous_guids) - set(current_guids) 
-		print(diff_guids)
-
-		# Compare the difference GUIDS against the current list of dicts. Matches
-		# are old/present dicts, non matches are new. New dicts will get written 
-		# to the new 'previous' file.
-		new_guids = []
-		for element in current:
-			if element['guid'] not in diff_guids:
-				new_file_contents.append(element)
-				new_guids.append(element['guid'])
-
-		# Write to new file.
-		with open(new_file_name, 'wt', encoding='utf-8') as new:
-			new.seek(0)
-			json.dump(new_file_contents, new, ensure_ascii=False, indent=4)
-		return {'new':new_guids,'old':old_guids}
-	except:
-		print("{}\n\n".format(sys.exc_info()))
-		raise
 
 def make_suggestions(keepers, data, inp, limits):
 	sugs = []
