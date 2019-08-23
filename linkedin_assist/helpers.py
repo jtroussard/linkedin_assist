@@ -116,17 +116,17 @@ def compare_and_keep(current, saved_file_name):
 		raise
 	return {'keep':keep,'remove':remove}
 
-def load_records(records_filename):
-	records_list = []
-	try:
-		with open(records_filename, 'r') as inp:
-			for line in inp:
-				records_list.append(line)
-	except:
-		print("Error:{}".format(sys.exc_info()))
-	return records_list
-
 def make_suggestions(keepers, data, inp, limits):
+	"""Using limits defined but the argument, 'limits', determines of any pre-existing GUID meets the
+	conditions to be reposted. All new posts are automatically suggested."
+
+	:param keepers: List of guids to consider.
+	:param data: ??? forgot if I even use this.
+	:param inp: File name string for the records JSON data.
+	:param limits: Configuration data containing values to set the thresholds for reposting. At this time
+	total posts and date since last post are allowed.
+	:returns: list of valid GUIDS.
+	"""
 	sugs = []
 	lim_age = dt.timedelta(days=limits['post_age'])
 	today = dt.datetime.today()
