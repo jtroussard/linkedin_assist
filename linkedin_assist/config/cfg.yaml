@@ -1,7 +1,7 @@
-RUN_TYPE: DEVELOPMENT
+RUN_TYPE: PRODUCTION
 KEYS:
-  client_id: get-this-from-linkedin
-  client_secret: get-this-from-linkedin
+  client_id: 78rvnfl9npk55y
+  client_secret: mcbZyp4HiguTpeGA
 URLS:
   target_url: https://dollarbankcareers.jobs/feed/json
   li_api_get_user_profile: https://api.linkedin.com/v2/me
