@@ -5,8 +5,9 @@
 __author__ = "Jacques Troussard"
 __copyright__ = "Copyright 2019, TekkSparrow"
 
-import yaml, requests, json, sys
+import yaml, requests, json, sys, random
 import datetime as dt
+import english as en
 
 def import_configurations(cl_args):
 	"""
@@ -188,3 +189,22 @@ def search(guid, alist):
 	for g in alist:
 		if g['guid'] == guid:
 			return g
+
+def create_message(job, message_bank):
+	m_pattern = random.choice(message_bank)
+	m_title = job['title']
+
+	if m_pattern.startswith('$'):
+		m_pattern = m_pattern[1:]
+		m_title = en.pluralize(m_title)
+
+	msg = m_pattern.format(title=m_title, city=job['city'])
+	print(msg)
+	return msg
+
+def add_hashtags(message, hashtags):
+	pattern = ".\n.\n.\n.\n.\n.\n.\n.\n.\n"
+	message = "{}{}".format(message, pattern)
+	for tag in hashtags:
+		message = "{}#{} ".format(message, tag)
+	return message

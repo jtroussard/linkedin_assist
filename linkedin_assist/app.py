@@ -6,11 +6,11 @@ __author__ = "Jacques Troussard"
 __copyright__ = "Copyright 2019, TekkSparrow"
 
 import sys, requests, selector, json
-
-from classes.LinkedinAssist import LinkedinAssist
-
 import helpers as hs
 import datetime as dt
+
+from classes.LinkedinAssist import LinkedinAssist
+from config import messages
 
 today = dt.datetime.today()
 
@@ -24,6 +24,7 @@ def main_func():
 	# Unpack the configuration variables
 	TARGET_URL          = config['URLS']['target_url']
 	KEYWORDS            = config['KEYWORDS']['job_title']
+	HASHTAGS            = config['KEYWORDS']['hashtags']
 	FN_SAVED_GUIDS      = config['FILES']['saved_guids']
 	FN_RECORDS          = config['FILES']['records']
 	LIMITS              = config['LIMITS']
@@ -69,8 +70,11 @@ def main_func():
 			with open(FN_RECORDS, "r+") as r:
 				records = json.load(r)
 				for selection in user_selections['posts']:
+					print('\n\n\n')
 					job = hs.search(selection.split(':')[1].strip(), job_list_json)
-					post = linkedin_assist_obj.form_post(job, urn)
+					msg = hs.create_message(job, messages.MESSAGES)
+					msg = hs.add_hashtags(msg, HASHTAGS)
+					post = linkedin_assist_obj.form_post(job, urn, msg)
 					if linkedin_assist_obj.make_posts(post):
 						print("Posting successful for . . . . . {}".format(job['title']))
 						hs.update_records(r, records, job, today)
