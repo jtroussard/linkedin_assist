@@ -40,8 +40,8 @@ if "&access_token=" in url:
 - Web Application Version.
 - Track and offer statistical analysis on posts made.
 - Presistent Token (?)
-- Variable post message formats.
-- Determine and add collection of hashtags to posts.
+- ~~Variable post message formats.~~ __DONE__
+- ~~Determine and add collection of hashtags to posts.~~ __DONE__ without determination (just simple tag bank)
 - Browser preference selection or perhaps autodetection feature.
 - Embed SQLite, drop files all together.
 - Build out LinkedIn class into my own vanilla lib.
