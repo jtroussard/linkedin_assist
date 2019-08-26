@@ -12,6 +12,7 @@
 
 5. Wrap up version 1 asap and then do a arch restructure of the program where the job data remains intact and passed through the program instead of building all these lists. Update records using the intact data via the use of sub functions i.e. hs.search(x,x,x,x,type of search, etc...)
 
+6. Token persistence. Store token somewhere check if present first thing....
 ## app.py
 
 ### Main
