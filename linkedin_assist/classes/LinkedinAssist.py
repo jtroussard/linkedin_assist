@@ -1,4 +1,3 @@
-from quick_fixes.oauth2_session import OAuth2Session
 from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 from time import sleep
 
