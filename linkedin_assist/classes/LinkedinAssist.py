@@ -40,7 +40,7 @@ class LinkedinAssist():
         else:
             self.vault = Vault(config)
 
-    def make_connection(self):
+    def get_access(self):
         """Have the user authenticate."""
 
         """ This is NOT a production quality program ad the os environ attr
@@ -80,8 +80,11 @@ class LinkedinAssist():
         
         # Get the authorization verifier code from the callback url
         redirect_response = input('Paste the full redirect URL here:')
-        self.session.fetch_token(token_url,client_secret=client_secret,include_client_id=True,authorization_response=redirect_response)
-        return self.session.authorized
+        tk = self.session.fetch_token(token_url,client_secret=client_secret,include_client_id=True,authorization_response=redirect_response)
+        if self.session.authorized:
+            return tk
+        else:
+            return None
 
     def get_urn(self, res_link):
         # Extract the Linkedin URN

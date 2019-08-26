@@ -59,10 +59,20 @@ def main_func():
 		linkedin_assist_obj = LinkedinAssist(config) # <-- Basically a modified OAuth2 Request Object
 		
 		try: # Get Authenticated
-			if linkedin_assist_obj.make_connection():
+			token = linkedin_assist_obj.get_access()
+			if token:
 				urn = linkedin_assist_obj.get_urn(API_URL_GET_USER)
+				try:
+					with open('./data/token', 'w') as token_save:
+						token_save.seek(0)
+						json.dump(token, token_save, indent=2)
+						token_save.truncate()
+						sys.exit()
+				except IOError:
+					print("File not found or path is incorrect:{}\n{}".format(saved_file_name, sys.exc_info()))
+					raise
 			else:
-				sys.exit("Connection to Linkedin API could NOT be made. Exiting program.")
+				sys.exit("Authentication to Linkedin API could NOT be made. Exiting program.")
 		except SystemExit:
 			pass
 		

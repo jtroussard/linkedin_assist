@@ -1,4 +1,4 @@
-RUN_TYPE: PRODUCTION
+RUN_TYPE: DEVELOPMENT
 KEYS:
   client_id: get-this-from-linkedin
   client_secret: get-this-from-linkedin
