@@ -30,6 +30,7 @@ def main_func():
 	LIMITS              = config['LIMITS']
 	API_URL_GET_USER    = config['URLS']['li_api_get_user_profile']
 
+	tkn = None
 
 	# Fetch JSON format job posting data. Store current data to guid file.
 	data = hs.get_job_data(TARGET_URL)
@@ -57,12 +58,20 @@ def main_func():
 
 	if user_selections:
 		linkedin_assist_obj = LinkedinAssist(config) # <-- Basically a modified OAuth2 Request Object
+
+		# Check for existing token
+		try:
+			token_file = open('./data/token')
+			tkn = json.load(token_file)
+		except IOError:
+			tkn = None
+			print("token not found")
 		
-		try: # Get Authenticated
+		# Make connection either with token or manual user authentication.
+		if not tkn:
 			token = linkedin_assist_obj.get_access()
 			if token:
-				urn = linkedin_assist_obj.get_urn(API_URL_GET_USER)
-				try:
+				try: # Save the auth token for future logins
 					with open('./data/token', 'w') as token_save:
 						token_save.seek(0)
 						json.dump(token, token_save, indent=2)
@@ -71,10 +80,14 @@ def main_func():
 				except IOError:
 					print("File not found or path is incorrect:{}\n{}".format(saved_file_name, sys.exc_info()))
 					raise
-			else:
-				sys.exit("Authentication to Linkedin API could NOT be made. Exiting program.")
-		except SystemExit:
-			pass
+		else:
+			linkedin_assist_obj.get_access(tkn)
+
+		# Exit program if connection unsuccessful, otherwise configure target resource link
+		if not linkedin_assist_obj.authorized:
+			sys.exit("Authentication to Linkedin API could NOT be made. Exiting program.")
+		else:
+			urn = linkedin_assist_obj.get_urn(API_URL_GET_USER)
 		
 		try: # POST request to LinkedIn & updating records
 			with open(FN_RECORDS, "r+") as r:

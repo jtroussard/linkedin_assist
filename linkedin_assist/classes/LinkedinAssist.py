@@ -24,6 +24,7 @@ class LinkedinAssist():
         self.job_data = job_data
         self.session = session
         self.config = config
+        self.authroized = False
         if config['RUN_TYPE'] == 'DEVELOPMENT':
             try:
                 from yaml import Cloader as Loader, CDumper as Dumper
@@ -40,7 +41,7 @@ class LinkedinAssist():
         else:
             self.vault = Vault(config)
 
-    def get_access(self):
+    def get_access(self, token=None):
         """Have the user authenticate."""
 
         """ This is NOT a production quality program ad the os environ attr
@@ -65,24 +66,28 @@ class LinkedinAssist():
         authorization_base_url = self.config['URLS']['li_api_auth_base']
         token_url = self.config['URLS']['li_api_token']
 
-        # Authorized Redirect URL (from LinkedIn configuration)
-        self.session = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope)
+        if token:
+            self.session = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope, token=token)
+        else:
+            self.session = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope)
         self.session = linkedin_compliance_fix(self.session)
         authorization_url, state = self.session.authorization_url(authorization_base_url)
 
         # Alert user of browser action and to return to terminal
-        input("Attention! A browser will open after you confirm this step.\nPlease athenticate, copy the redirect url, and paste it into the next terminal prompt. Press any key to continue.")
+        if not token:
+            input("Attention! A browser will open after you confirm this step.\nPlease athenticate, copy the redirect url, and paste it into the next terminal prompt. Press any key to continue.")
 
-        # Redirect user to LinkedIn for authorization
-        import webbrowser
-        controller = webbrowser.get('firefox')
-        controller.open(authorization_url)
+            # Redirect user to LinkedIn for authorization
+            import webbrowser
+            controller = webbrowser.get('firefox')
+            controller.open(authorization_url)
         
-        # Get the authorization verifier code from the callback url
-        redirect_response = input('Paste the full redirect URL here:')
-        tk = self.session.fetch_token(token_url,client_secret=client_secret,include_client_id=True,authorization_response=redirect_response)
+            # Get the authorization verifier code from the callback url
+            redirect_response = input('Paste the full redirect URL here:')
+            self.session.fetch_token(token_url,client_secret=client_secret,include_client_id=True,authorization_response=redirect_response)
         if self.session.authorized:
-            return tk
+            self.authorized = True
+            return self.session
         else:
             return None
 
