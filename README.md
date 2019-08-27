@@ -1,4 +1,4 @@
-linkedin_assist Terminal Application
+LinkedIn Assist Terminal Application (Share automation)
 ==================
 
 ## Purpose
@@ -32,6 +32,8 @@ if "&access_token=" in url:
 - [X] YOLO code.
 - [X] Modularize.
 - [X] Add selection feature ~~NpyScreen~~ PyInquirer
+- [ ] Presistent token.
+- [ ] CRON automation with e-mail alerts.
 - [ ] Test and verify entire program.
 - [ ] Create documentation.
 
