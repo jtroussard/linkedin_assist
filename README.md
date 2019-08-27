@@ -32,7 +32,7 @@ if "&access_token=" in url:
 - [X] YOLO code.
 - [X] Modularize.
 - [X] Add selection feature ~~NpyScreen~~ PyInquirer
-- [ ] Presistent token.
+- [X] Presistent token.
 - [ ] CRON automation with e-mail alerts.
 - [ ] Test and verify entire program.
 - [ ] Create documentation.
@@ -41,9 +41,9 @@ if "&access_token=" in url:
 - Picture generator
 - Web Application Version.
 - Track and offer statistical analysis on posts made.
-- Presistent Token (?)
 - ~~Variable post message formats.~~ __DONE__
 - ~~Determine and add collection of hashtags to posts.~~ __DONE__ without determination (just simple tag bank)
 - Browser preference selection or perhaps autodetection feature.
 - Embed SQLite, drop files all together.
 - Build out LinkedIn class into my own vanilla lib.
+- Double check job post link (404/missing/titles match?)
