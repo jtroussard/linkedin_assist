@@ -24,7 +24,7 @@ class LinkedinAssist():
         self.job_data = job_data
         self.session = session
         self.config = config
-        self.authroized = False
+        self.authorized = False
         if config['RUN_TYPE'] == 'DEVELOPMENT':
             try:
                 from yaml import Cloader as Loader, CDumper as Dumper

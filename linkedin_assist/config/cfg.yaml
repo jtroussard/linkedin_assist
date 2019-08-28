@@ -1,4 +1,5 @@
 RUN_TYPE: DEVELOPMENT
+RUN_MODE: AUTO
 KEYS:
   client_id: get-this-from-linkedin
   client_secret: get-this-from-linkedin
@@ -10,13 +11,14 @@ URLS:
   li_api_redirect: http://127.0.0.1
   li_api_share: https://api.linkedin.com/v2/ugcPosts
 LIMITS:
-  post_age: 10
-  post_count: 30
+  post_age: 14
+  post_count: 10
 FILES:
   data: ./data/jobs.json
   records: ./data/records.json
   saved_guids: ./data/saved_guids.txt
   dev_vault: ./dnt/vault.yaml
+SELECTION_OPTION: 1
 KEYWORDS:
   job_title:
     - it

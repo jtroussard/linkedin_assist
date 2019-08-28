@@ -22,6 +22,7 @@ def main_func():
 		sys.exit()
 
 	# Unpack the configuration variables
+	RUN_MODE            = config['RUN_MODE']
 	TARGET_URL          = config['URLS']['target_url']
 	KEYWORDS            = config['KEYWORDS']['job_title']
 	HASHTAGS            = config['KEYWORDS']['hashtags']
@@ -52,9 +53,12 @@ def main_func():
 	else:
 		job_list_json = []
 		for job in it_jobs:
-			if job['guid'] in suggestions:
-				job_list_json.append(job)
-		user_selections = selector.present_menu(job_list_json)
+				if job['guid'] in suggestions:
+					job_list_json.append(job)
+		if RUN_MODE == 'MANUAL':
+			user_selections = selector.present_menu(job_list_json)
+		else:
+			user_selections = hs.apply_config_selections(config, job_list_json)
 
 	if user_selections:
 		linkedin_assist_obj = LinkedinAssist(config) # <-- Basically a modified OAuth2 Request Object
@@ -66,7 +70,7 @@ def main_func():
 		except IOError:
 			tkn = None
 			print("token not found")
-		
+			raise
 		# Make connection either with token or manual user authentication.
 		if not tkn:
 			token = linkedin_assist_obj.get_access()
@@ -82,18 +86,18 @@ def main_func():
 					raise
 		else:
 			linkedin_assist_obj.get_access(tkn)
-
 		# Exit program if connection unsuccessful, otherwise configure target resource link
 		if not linkedin_assist_obj.authorized:
 			sys.exit("Authentication to Linkedin API could NOT be made. Exiting program.")
 		else:
 			urn = linkedin_assist_obj.get_urn(API_URL_GET_USER)
-		
+
 		try: # POST request to LinkedIn & updating records
 			with open(FN_RECORDS, "r+") as r:
 				records = json.load(r)
+				print('6')
 				for selection in user_selections['posts']:
-					print('\n\n\n')
+					print('\n\n')
 					job = hs.search(selection.split(':')[1].strip(), job_list_json)
 					msg = hs.create_message(job, messages.MESSAGES)
 					msg = hs.add_hashtags(msg, HASHTAGS)
@@ -103,8 +107,8 @@ def main_func():
 						hs.update_records(r, records, job, today)
 					else:
 						print("Something went wrong with  . . . {}".format(job['title']))
-		except:
-			print("Error:{}".format(sys.exc_info()))
+		except IOError:
+			print("Error!!:{}".format(sys.exc_info()))
 			raise
 	else:
 		print("No shares made to LinkedIn. Exiting Program.")

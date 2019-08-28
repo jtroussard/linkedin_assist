@@ -208,3 +208,15 @@ def add_hashtags(message, hashtags):
 	for tag in hashtags:
 		message = "{}#{} ".format(message, tag)
 	return message
+
+def apply_config_selections(config, list_of_jobs):
+	final_list = {'posts': []}
+	n = config['SELECTION_OPTION']
+	if len(list_of_jobs) > n:
+		n = len(list_of_jobs)
+	for i in range(n):
+		job = random.choice(list_of_jobs)
+		final_list['posts'].append("{:<32}: {:>32}".format(job['title'], job['guid']))
+	return final_list
+
+
