@@ -35,5 +35,4 @@ def present_menu(suggestions):
     answers = prompt(questions, style=style)
     if 'None' in answers['posts']:
         return None
-    print(answers)
     return answers
