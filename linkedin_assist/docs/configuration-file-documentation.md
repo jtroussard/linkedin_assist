@@ -3,8 +3,9 @@
 Only the non-default options are listed below. All other fields are defaults. The `target_url` field could be modified to extract data from another source however this would require some program modification or at least the retrieved data to be in the same format this program is configured.  
 
   - RUN_TYPE:  
-      - "DEVELOPMENT" - this allows the program to run to completion, however will not actually post to LinkedIn. Instead a demo of the post will print to console.  
+      - "TEST" - this allows the program to run to completion, however will not actually post to LinkedIn. Instead a demo of the post will print to console.  
       - "PRODUCTION" - This should be self explainitory.  
+      - "DEVELOPMENT" - Sources LinkedIn OAuth2 keys from an untracked directory.
         
   - RUN_MODE:  
       - "AUTO" - Using `crontab` this program can be automated setting this option. Otherwise this can be left balnk for manual runs.
