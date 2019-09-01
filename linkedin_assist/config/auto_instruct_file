@@ -1,2 +1,2 @@
 # m h  dom mon dow   command
-* * * * * . /home/jacques/Projects/linkedin_assist/venv/bin/activate && cd /home/jacques/Projects/linkedin_assist/linkedin_assist/ && python3 ./app.py ./config/cfg.yaml >> /home/jacques/noconfig.txt
+* * * * * . ~/crontab/linkedin_assist/venv/bin/activate && cd ~/linkedin_assist/linkedin_assist/ && python3 ./app.py ./config/cfg.yaml >> ~/crontab/log.txt
