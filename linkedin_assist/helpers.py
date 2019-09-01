@@ -199,7 +199,6 @@ def create_message(job, message_bank):
 		m_title = en.pluralize(m_title)
 
 	msg = m_pattern.format(title=m_title, city=job['city'])
-	print(msg)
 	return msg
 
 def add_hashtags(message, hashtags):
