@@ -1,5 +1,5 @@
-RUN_TYPE: DEVELOPMENT
-RUN_MODE: AUTO
+RUN_TYPE: TEST
+RUN_MODE: MANUAL
 KEYS:
   client_id: get-this-from-linkedin
   client_secret: get-this-from-linkedin
@@ -12,7 +12,7 @@ URLS:
   li_api_share: https://api.linkedin.com/v2/ugcPosts
 LIMITS:
   post_age: 14
-  post_count: 10
+  post_count: 5
 FILES:
   data: ./data/jobs.json
   records: ./data/records.json
