@@ -36,8 +36,6 @@ This program was developed for **Ubuntu 18.04**, and has not been tested in any 
 7. Program is ready to be kicked off.  
 `$ cd ./linkedin_assist && python3 app.py config/cfg.yaml`
 
-8. 
-
 
 ## Programming Notes  
 
@@ -59,7 +57,7 @@ if "&access_token=" in URL:
 - [X] YOLO code.
 - [X] Modularize.
 - [X] Add selection feature ~~NpyScreen~~ PyInquirer
-- [?] Persistent token. **Need to add logic to renew expired tokens**
+- [ ] Presistent token. **Need to add logic to renew expired tokens**
 - [ ] CRON automation with e-mail alerts.
 - [ ] Test and verify entire program.
 - [ ] Create documentation.
