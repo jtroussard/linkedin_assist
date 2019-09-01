@@ -23,6 +23,7 @@ def main_func():
 
 	# Unpack the configuration variables
 	RUN_MODE            = config['RUN_MODE']
+	RUN_TYPE            = config['RUN_TYPE']
 	TARGET_URL          = config['URLS']['target_url']
 	KEYWORDS            = config['KEYWORDS']['job_title']
 	HASHTAGS            = config['KEYWORDS']['hashtags']
@@ -69,22 +70,21 @@ def main_func():
 			tkn = json.load(token_file)
 		except IOError:
 			tkn = None
-			print("token not found")
-			raise
 		# Make connection either with token or manual user authentication.
 		if not tkn:
-			token = linkedin_assist_obj.get_access()
+			print("\n============================================================\nOAuth2 token not found. User will have to authenticate.\n============================================================\n\n             Please follow the prompts.\n")
+			token = linkedin_assist_obj.get_access().token
 			if token:
 				try: # Save the auth token for future logins
 					with open('./data/token', 'w') as token_save:
 						token_save.seek(0)
 						json.dump(token, token_save, indent=2)
 						token_save.truncate()
-						sys.exit()
 				except IOError:
 					print("File not found or path is incorrect:{}\n{}".format(saved_file_name, sys.exc_info()))
 					raise
 		else:
+			print("\n============================================================\nOAuth2 token present, will attempt to use token.\n============================================================\n\n")
 			linkedin_assist_obj.get_access(tkn)
 		# Exit program if connection unsuccessful, otherwise configure target resource link
 		if not linkedin_assist_obj.authorized:
@@ -95,18 +95,22 @@ def main_func():
 		try: # POST request to LinkedIn & updating records
 			with open(FN_RECORDS, "r+") as r:
 				records = json.load(r)
-				print('6')
 				for selection in user_selections['posts']:
-					print('\n\n')
+#					print('\n\n')
 					job = hs.search(selection.split(':')[1].strip(), job_list_json)
 					msg = hs.create_message(job, messages.MESSAGES)
 					msg = hs.add_hashtags(msg, HASHTAGS)
 					post = linkedin_assist_obj.form_post(job, urn, msg)
 					if linkedin_assist_obj.make_posts(post):
-						print("Posting successful for . . . . . {}".format(job['title']))
-						hs.update_records(r, records, job, today)
+						if ("DEVELOPMENT" or "TEST") in RUN_TYPE:
+							print('DEMO print:')
+						else:
+							print('POSTED text:')
+							hs.update_records(r, records, job, today)
+						print(msg)
+						print("\nSuccess! [{}]\n\n".format(job['title']))
 					else:
-						print("Something went wrong with  . . . {}".format(job['title']))
+						print("\nFailed :( [{}]\n\n".format(job['title']))
 		except IOError:
 			print("Error!!:{}".format(sys.exc_info()))
 			raise

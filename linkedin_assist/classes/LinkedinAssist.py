@@ -75,7 +75,7 @@ class LinkedinAssist():
 
         # Alert user of browser action and to return to terminal
         if not token:
-            input("Attention! A browser will open after you confirm this step.\nPlease athenticate, copy the redirect url, and paste it into the next terminal prompt. Press any key to continue.")
+            input("Attention! You will be taken to a LinkedIn page to authenticate.\nEnter Linkedin user login credentials, accept, and then follow\nthese instructions.\n\nTo athenticate;\n   1. Copy the URL from the browser after signing into LinkedIn\n   2. Return to this terminal.\n   3. Paste the address in the prompt and press the ENTER key.\n\n                        [Press ENTER]\n")
 
             # Redirect user to LinkedIn for authorization
             import webbrowser
@@ -137,15 +137,15 @@ class LinkedinAssist():
         return json.dumps(p)
 
     # The returns for this function definitely feel stupid. Sleep on this and figure out a less convoluted way of returning status on this function.
+    # Yeah what's up withi this dooder... figure something out.
     def make_posts(self, job):
         status = 0
         req_link = self.config['URLS']['li_api_share']
         if self.config['RUN_TYPE'] == 'PRODUCTION':
             r = self.session.post(req_link, data=job, headers={'Content-Type':'application/json','X-Restli-Protocol-Version':'2.0.0','x-li-format':'json'})
-            print(r.status_code)
-            print(r.text)
-            sleep(10)
-        elif self.config['RUN_TYPE'] == 'DEVELOPMENT':
+            sleep(3)
+        elif ("DEVELOPMENT" or "TEST") in self.config['RUN_TYPE']:
+        #elif self.config['RUN_TYPE'] == 'DEVELOPMENT':
             job = json.loads(job)
             post_text = job['specificContent']['com.linkedin.ugc.ShareContent']['shareCommentary']['text']
 
@@ -158,8 +158,5 @@ class LinkedinAssist():
                 else:
                     output = "{}\n{}".format(output, char)
                     counter = 0
-           
-            print("---------------test post print--------------------")
-            print(output)
-            print("\n\n")
+            print("\n")
         return True
