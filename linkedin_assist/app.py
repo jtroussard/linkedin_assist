@@ -100,6 +100,7 @@ def main_func():
 					job = hs.search(selection.split(':')[1].strip(), job_list_json)
 					msg = hs.create_message(job, messages.MESSAGES)
 					msg = hs.add_hashtags(msg, HASHTAGS)
+					msg = hs.edit_language(msg)
 					post = linkedin_assist_obj.form_post(job, urn, msg)
 					if linkedin_assist_obj.make_posts(post):
 						if ("DEVELOPMENT" or "TEST") in RUN_TYPE:
