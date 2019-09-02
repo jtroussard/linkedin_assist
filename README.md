@@ -10,7 +10,7 @@ A python program to collect job data and partially automate shares to your Linke
 
 ## Environment  
 
-This program was developed for **Ubuntu 18.04**, and has not been tested in any other environment. It is strongly suggested if you'd like to use this program to set yourself up in the same environment.
+This program was developed for **Ubuntu 18.04**, and has not been tested in any other environment. If you'd like to use this program it is strongly suggested to setup in the same environment.
 
 #### Tested Environments  
 - Ubuntu 16.04
