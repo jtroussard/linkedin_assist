@@ -33,8 +33,6 @@ def main_func():
 	LIMITS              = config['LIMITS']
 	API_URL_GET_USER    = config['URLS']['li_api_get_user_profile']
 
-	tkn = None
-
 	# Fetch JSON format job posting data. Store current data to guid file.
 	data = hs.get_job_data(TARGET_URL)
 
