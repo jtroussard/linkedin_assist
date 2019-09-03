@@ -1,5 +1,22 @@
 # Notes
 
+## From README.md
+
+
+1. Modified OAuth2 Requests library: Under linkedin_assist/linkedin_assist/quick_fixes/ is a modified copy of the oauth2_session.py module. Changes to this module in particular were necessary to line up requests made to LinkedIn's API. Specifically the authentication code gets appended to the request twice, once as "oauth2_access_token" and again as "access_token". When making the request with both parameters the response would indicate unpremitted fields. The only solution I could come up with involved a quick and dirty if statement that checked the URL value for the second access_token field, if present it reverts the string to an older version of the URL before `.add_token()` method is called. This is all done within the `request()` method. (See code block below) I've made comments on the requests github repo with regards to this issue and received no reply. After reviewing the Requests main page, there was a notice that explained the library was in maintenance mode only and the contributors/maintainers/developers were engaged with a Requests 3 roll out. [*Side Note: Disheartening but interesting blog post I found while looking into this issue*](https://vorpus.org/blog/why-im-not-collaborating-with-kenneth-reitz/)
+
+```python
+old_version_URL = URL
+URL, headers, data = self._client.add_token(URL, http_method=method, body=data, headers=headers)
+# Dirty work around to prevent the `access_token` parameter from being added
+# to the URL, causing a unpermitted parameters error requesting linkedin resource.
+if "&access_token=" in URL:
+    URL = old_version_URL
+```
+
+2. Npyscreen canceled. I'm sure this is a great library, but personally the documentation left a lot to be desired. I was wondering around the docs for a few hours, tinkering with a few things here and there and decided that to get any value from it I'd have to spend absolutely way to much time. Ultimately the widget classes seemed to be missing lots of interfacing instructions. Also I noticed that passing arbitrary arguments to the add_widget method didn't seem to bother the program at all. I would think at least some sort of warning would be thrown. As I mentioned before, it is probably just above me at this moment as the stress on OOP principles in the tutorial were impressive, it just wasn't very "get something going quickly" friendly. Anyways a little more reading online and I found a more straight forward library, PyInquirer. Without really going into to deep I have a simple selector menu done and might come back and do more with this UI and library.
+
+
 ## Global
 
 1. ~~After reworking this app three times, I feel the for looping through dictionaries to keep tabs on posts and make matches across the application are a bit ugly and perhaps this app would benefit from a DBMS... look into that... maybe MongoDB since I won't have to worry about secruity too much... I guess after the application runs the db can dump a setup file for the next run? I dunno ask around for advice on this... perhaps a master json file could replace a DBMS... just need a nicer way to flip through dicts and make matches on the key value for GUID.~~ __Moved__ SQLite added to possible future updates list.
