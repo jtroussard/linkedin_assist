@@ -60,7 +60,7 @@ if "&access_token=" in URL:
 - [X] YOLO code.
 - [X] Modularize.
 - [X] Add selection feature ~~NpyScreen~~ PyInquirer
-- [ ] Presistent token. **Need to add logic to renew expired tokens**
+- [ ] ~~Presistent token.~~ **Renewing tokens is not available to normal consumer. Decided to error out with message in AUTO mode and force manual authentication in MANUAL mode.**
 - [ ] CRON automation with e-mail alerts.
 - [ ] Test and verify entire program.
 - [ ] Create documentation.
