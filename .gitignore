@@ -3,6 +3,7 @@ dnt/
 data/token
 token
 cfg.yaml
+tester.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -11,6 +11,7 @@ import datetime as dt
 
 from classes.LinkedinAssist import LinkedinAssist
 from config import messages
+from config.strings import STRINGS as s
 
 today = dt.datetime.today()
 
@@ -61,42 +62,55 @@ def main_func():
 		else:
 			user_selections = hs.apply_config_selections(config, job_list_json)
 
+	# Make connection with LinkedIn API
 	if user_selections:
 		linkedin_assist_obj = LinkedinAssist(config) # <-- Basically a modified OAuth2 Request Object
 
 		# Check for existing token
 		try:
 			token_file = open('./data/token')
-			tkn = json.load(token_file)
+			token = json.load(token_file)
+			linkedin_assist_obj.get_access(token=token)
+			print(s['main_token_present'])
 		except IOError:
-			tkn = None
-		# Make connection either with token or manual user authentication.
-		if not tkn:
-			print("\n============================================================\nOAuth2 token not found. User will have to authenticate.\n============================================================\n\n             Please follow the prompts.\n")
-			token = linkedin_assist_obj.get_access().token
-			if token:
-				try: # Save the auth token for future logins
-					with open('./data/token', 'w') as token_save:
-						token_save.seek(0)
-						json.dump(token, token_save, indent=2)
-						token_save.truncate()
-				except IOError:
-					print("File not found or path is incorrect:{}\n{}".format(saved_file_name, sys.exc_info()))
-					raise
-		else:
-			print("\n============================================================\nOAuth2 token present, will attempt to use token.\n============================================================\n\n")
-			linkedin_assist_obj.get_access(tkn)
-		# Exit program if connection unsuccessful, otherwise configure target resource link
-		if not linkedin_assist_obj.authorized:
-			sys.exit("Authentication to Linkedin API could NOT be made. Exiting program.")
-		else:
-			urn = linkedin_assist_obj.get_urn(API_URL_GET_USER)
+			print("[main] Warning: File access error. Reverting to manual authentication.")
 
-		try: # POST request to LinkedIn & updating records
+		# Perform manual authentication if Token isn't present or expired.
+		if not linkedin_assist_obj.session.authorized:
+			if RUN_MODE != "AUTO":
+				linkedin_assist_obj.get_access()
+				if not linkedin_assist_obj.session.authorized:
+					print("[main] Error: Authentication could not be made. Exiting Program")
+					sys.exit()
+			else:
+				print("[main] Authentication Error: Token problem. Possibly expired.")
+				sys.exit()
+		# Token is good - save to file for future use.
+		else:
+			try: 
+				with open('./data/token', 'w') as token_save:
+					token_save.seek(0)
+					json.dump(token, token_save, indent=2)
+					token_save.truncate()
+			except IOError:
+				print("[main] Error saving token to file.")
+
+		# Set URN
+		urn = linkedin_assist_obj.get_urn(API_URL_GET_USER)		
+
+		try: # POST request to LinkedIn & update records
+
+			# Load records file (date last posted, total times posted)
 			with open(FN_RECORDS, "r+") as r:
 				records = json.load(r)
+
+				# For each selection:
+				#  1. Create the base message (from random message bank (templates))
+				#  2. Add hashtags from hashtagbank
+				#  3. edit_language is a catch all method to fix small language bugs for example using UX abbrv. (might move this into the english module.)
+				#  4. Create the job request post.
+				#  5. Submit request to POST or print to console.
 				for selection in user_selections['posts']:
-#					print('\n\n')
 					job = hs.search(selection.split(':')[1].strip(), job_list_json)
 					msg = hs.create_message(job, messages.MESSAGES)
 					msg = hs.add_hashtags(msg, HASHTAGS)
@@ -113,7 +127,8 @@ def main_func():
 					else:
 						print("\nFailed :( [{}]\n\n".format(job['title']))
 		except IOError:
-			print("Error!!:{}".format(sys.exc_info()))
+			print("[main] Error: Records file could not be accessed.")
+			print("              No posts made to LinkedIn:\n\n{}".format(sys.exc_info()))
 			raise
 	else:
 		print("No shares made to LinkedIn. Exiting Program.")

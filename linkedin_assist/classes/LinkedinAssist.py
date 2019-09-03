@@ -2,6 +2,7 @@ from requests_oauthlib.compliance_fixes import linkedin_compliance_fix
 from time import sleep
 
 import os, json, yaml
+from config.strings import STRINGS as s
 
 class Vault:
     def __init__(self, config):
@@ -25,6 +26,8 @@ class LinkedinAssist():
         self.session = session
         self.config = config
         self.authorized = False
+        self.uri = None
+
         if config['RUN_TYPE'] == 'DEVELOPMENT':
             try:
                 from yaml import Cloader as Loader, CDumper as Dumper
@@ -66,30 +69,20 @@ class LinkedinAssist():
         authorization_base_url = self.config['URLS']['li_api_auth_base']
         token_url = self.config['URLS']['li_api_token']
 
-        if token:
-            self.session = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope, token=token)
-        else:
-            self.session = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope)
+        self.session = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope, token=token)
         self.session = linkedin_compliance_fix(self.session)
         authorization_url, state = self.session.authorization_url(authorization_base_url)
 
-        # Alert user of browser action and to return to terminal
-        if not token:
-            input("Attention! You will be taken to a LinkedIn page to authenticate.\nEnter Linkedin user login credentials, accept, and then follow\nthese instructions.\n\nTo athenticate;\n   1. Copy the URL from the browser after signing into LinkedIn\n   2. Return to this terminal.\n   3. Paste the address in the prompt and press the ENTER key.\n\n                        [Press ENTER]\n")
-
+        if not self.session.token:
+            input(s['manual_auth_prompt'])
             # Redirect user to LinkedIn for authorization
             import webbrowser
             controller = webbrowser.get('firefox')
             controller.open(authorization_url)
-        
             # Get the authorization verifier code from the callback url
             redirect_response = input('Paste the full redirect URL here:')
             self.session.fetch_token(token_url,client_secret=client_secret,include_client_id=True,authorization_response=redirect_response)
-        if self.session.authorized:
-            self.authorized = True
-            return self.session
-        else:
-            return None
+        return self.session
 
     def get_urn(self, res_link):
         # Extract the Linkedin URN
