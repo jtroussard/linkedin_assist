@@ -1,4 +1,4 @@
-RUN_TYPE: TEST
+RUN_TYPE: DEVELOPMENT
 RUN_MODE: MANUAL
 KEYS:
   client_id: get-this-from-linkedin
