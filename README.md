@@ -50,9 +50,9 @@ Moved to ./linkedin_assist/docs/notes.md
 - [X] Modularize.
 - [X] Add selection feature ~~NpyScreen~~ PyInquirer
 - [X] ~~Presistent token.~~ **Renewing tokens is not available to normal consumer. Decided to error out with message in AUTO mode and force manual authentication in MANUAL mode.**
-- [ ] CRON automation with e-mail alerts.
-- [ ] Test and verify entire program.
-- [ ] Create documentation.
+- [X] CRON automation with e-mail alerts.
+- [ ] Test and verify entire program. (WIP)
+- [ ] Create documentation. (WIP)
 
 ## Possible Upgrades  
 
