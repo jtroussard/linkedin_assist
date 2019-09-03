@@ -2,6 +2,7 @@
 dnt/
 data/token
 token
+cfg.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
