@@ -6,13 +6,14 @@
 
 2. ~~For development and production runs --- set it up so that instead of having a module named vault that you just tuck a dev config copy in to dnt folder and have it draw the file from there if the runtype is set to DEVELOPMENT and if it is production, set it to the one that is sitting in the project directory~~ __Complete__
 
-3. Additionally see if you can expand on the run types, instead of just having a test print and production run type create a run type that interacts with the API in a way, research and see if the linkedin api has a sandbox feature where you can test share your post and inspect the status codes.
+3. ~~Additionally see if you can expand on the run types, instead of just having a test print and production run type create a run type that interacts with the API in a way, research and see if the linkedin api has a sandbox feature where you can test share your post and inspect the status codes.~~
 
 4. Also read up on sys.exit() and find a graceful way to shut down program when there is nothing to post of user quits program.
 
 5. Wrap up version 1 asap and then do a arch restructure of the program where the job data remains intact and passed through the program instead of building all these lists. Update records using the intact data via the use of sub functions i.e. hs.search(x,x,x,x,type of search, etc...)
 
-6. Token persistence. Store token somewhere check if present first thing....
+6. ~~Token persistence. Store token somewhere check if present first thing....~~  
+
 ## app.py
 
 ### Main
@@ -33,5 +34,5 @@
 ### Functions
 
 1. form_post
-    - Noticed in this function that the linkedin user identifier, URN could probably be a class variable since the program will only post for one user at a time.
+    - This thought was not entirely true, so the note can be ignored. ~~Noticed in this function that the linkedin user identifier, URN could probably be a class variable since the program will only post for one user at a time.~~
     - There are a lot of comments in this function related to the format of the post once it hits linkedin, this could be moved and used as part of another user interaction, giving a preview of the post before sending it off.
