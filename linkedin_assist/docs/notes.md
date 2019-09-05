@@ -16,6 +16,9 @@ if "&access_token=" in URL:
 
 2. Npyscreen canceled. I'm sure this is a great library, but personally the documentation left a lot to be desired. I was wondering around the docs for a few hours, tinkering with a few things here and there and decided that to get any value from it I'd have to spend absolutely way to much time. Ultimately the widget classes seemed to be missing lots of interfacing instructions. Also I noticed that passing arbitrary arguments to the add_widget method didn't seem to bother the program at all. I would think at least some sort of warning would be thrown. As I mentioned before, it is probably just above me at this moment as the stress on OOP principles in the tutorial were impressive, it just wasn't very "get something going quickly" friendly. Anyways a little more reading online and I found a more straight forward library, PyInquirer. Without really going into to deep I have a simple selector menu done and might come back and do more with this UI and library.
 
+3. Details from progress list...  
+**Renewing tokens is not available to normal consumer. Decided to error out with message in AUTO mode and force manual authentication in MANUAL mode.**
+
 
 ## Global
 
