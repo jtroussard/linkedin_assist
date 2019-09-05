@@ -50,7 +50,7 @@ Moved to ./linkedin_assist/docs/notes.md
 - [X] YOLO code.
 - [X] Modularize.
 - [X] Add selection feature ~~NpyScreen~~ PyInquirer
-- [X] ~~Presistent token.~~ **Renewing tokens is not available to normal consumer. Decided to error out with message in AUTO mode and force manual authentication in MANUAL mode.**
+- [X] ~~Presistent token.~~ **Renewing tokens is not available to normal consumer. See programming notes for details.**
 - [X] CRON automation with e-mail alerts.
 - [ ] Test and verify entire program. (WIP)
 - [ ] Create documentation. (WIP)
