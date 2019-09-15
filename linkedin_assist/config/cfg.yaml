@@ -1,0 +1,57 @@
+RUN_TYPE: DEVELOPMENT
+RUN_MODE: MANUAL
+KEYS:
+  client_id: get-this-from-linkedin
+  client_secret: get-this-from-linkedin
+URLS:
+  target_url: https://dollarbankcareers.jobs/feed/json
+  li_api_get_user_profile: https://api.linkedin.com/v2/me
+  li_api_auth_base: https://www.linkedin.com/oauth/v2/authorization
+  li_api_token: https://www.linkedin.com/oauth/v2/accessToken
+  li_api_redirect: http://127.0.0.1
+  li_api_share: https://api.linkedin.com/v2/ugcPosts
+LIMITS:
+  post_age: 14
+  post_count: 5
+FILES:
+  data: ./data/jobs.json
+  records: ./data/records.json
+  saved_guids: ./data/saved_guids.txt
+  dev_vault: ./dnt/vault.yaml
+SELECTION_OPTION: 1
+KEYWORDS:
+  job_title:
+    - it
+    - programmer
+    - systems
+    - developer
+    - idms
+    - database
+    - cobol
+    - jcl
+    - mainframe
+    - pc
+    - network
+    - middleware
+    - desktop
+    - linux
+    - windows
+    - microsoft
+    - sharepoint
+    - application
+    - digital
+    - ibm
+    - sql
+  hashtags:
+    - DollarBank 
+    - ITjobs
+    - technologyjobs
+    - infotechjobs
+    - informationtechnologyjobs
+    - PGHjobs
+    - pittsburghjobs
+    - westernpennsylvaniajobs
+    - bankjobs
+    - bankingjobs
+    - fintech
+    - computersciencejobs
