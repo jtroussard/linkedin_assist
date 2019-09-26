@@ -155,17 +155,19 @@ def make_suggestions(keepers, data, inp, limits):
 		raise
 	return sugs
 
-def get_user_feedback(options):
-	reply = {}
-	u_inp = input("\nWould you like to post these jobs?\nY - Yes\nN - No\n> ")
-	if u_inp.lower() in options:
-		reply['control'] = False
-	else:
-		reply['value'] = True
-	reply['value'] = u_inp
-	return reply
-
 def update_records(file, records, job, date):
+	"""Updates the record file. This file keeps track of each job posted. Specifically noting the last date it was posted and how many total times the job was posted.
+
+	:param file: The records file.
+	:type file: File Object.
+	:param records: Data from records file.
+	:type records: list
+	:param job: The input job from the current run. This is the job that has been posted to LinkedIn.
+	:type job: dict
+	:param date: Today's date. Used to update the "date last posted" field in the records file.
+	:type date: datetime object
+	:returns: True
+	"""
 	ele_found = False
 	for element in records:
 		if element['guid'] == job['guid']:
@@ -186,11 +188,28 @@ def update_records(file, records, job, date):
 	return True
 
 def search(guid, alist):
+	"""Returns a guid if guid value is matched within a list of dictionaries on the key 'guid'.
+
+	:param guid: Target guid.
+	:type guid: string
+	:param alist: List of dictionaries containing the key 'guid'.
+	:type alist: list
+	:returns: guid
+	"""
 	for g in alist:
 		if g['guid'] == guid:
 			return g
+	return None
 
 def create_message(job, message_bank):
+	"""Selects a random message template from the message bank and then populates the necessary blanks with values from the job posting.
+
+	:param job: Job post data.
+	:type job: dict
+	:param message_bank: Collection of message templates.
+	:type message: list
+	:returns: Populated message.
+	"""
 	m_pattern = random.choice(message_bank)
 	m_title = job['title']
 
@@ -202,6 +221,14 @@ def create_message(job, message_bank):
 	return msg
 
 def add_hashtags(message, hashtags):
+	"""Performs additional formating to the posting message and addes hashtags from a hashtag bank.
+
+	:param message: Posting message.
+	:type message: string
+	:param hashtags: Collection of hashtags.
+	:type message: list
+	:returns: Populated, formatted, and hashtagged message.
+	"""
 	pattern = ".\n.\n.\n.\n.\n.\n.\n.\n.\n"
 	message = "{}{}".format(message, pattern)
 	for tag in hashtags:
@@ -209,6 +236,13 @@ def add_hashtags(message, hashtags):
 	return message
 
 def apply_config_selections(config, list_of_jobs):
+	"""When the program run in AUTO mode the user must configure the program to determine how many posts it will be allowed to post. For example if the program finds 100 viable posts, but the user configured the program to only post 3 posts at a time, 3 random posts of the 100 will be posted to LinkedIn. Since the posts have already been filterd on days from last post and total posts, eventually all posts will be posted. Another example would include a low return value. Say the program only finds 1 viable post however the user configured the porgram to post 5 at a time. The Program will only post the one available job.
+
+	:param config: Unpacked configuration file.
+	:param list_of_jobs: Viable job postings.
+	:type list_of_jobs: list
+	:returns: Final list of jobs to post - Title and GUID included.
+	"""
 	final_list = {'posts': []}
 	n = config['SELECTION_OPTION']
 	if len(list_of_jobs) > n:
@@ -219,8 +253,12 @@ def apply_config_selections(config, list_of_jobs):
 	return final_list
 
 def edit_language(message):
+	"""Edits language of message for readability. Hardcoded changes.
+
+	:param message: Posting message.
+	:type message: string
+	:returns: Populated, formatted, and hashtagged message.
+	"""
 	message.replace("User Experience", "UX")
 	message.replace("User Interface", "UI")
 	return message
-
-
