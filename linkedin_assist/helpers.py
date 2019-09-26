@@ -213,11 +213,22 @@ def create_message(job, message_bank):
 	m_pattern = random.choice(message_bank)
 	m_title = job['title']
 
+	if "AVP" in m_title:
+		print("matched avp-------------------")
+		if "/AVP" in m_title:
+			m_title = m_title.replace("/AVP", "")
+		elif "AVP/" in m_title:
+			m_title = m_title.replace("AVP/", "")
+		else:
+			m_title = m_title.replace("AVP", "")
+		print(m_title)
+
 	if m_pattern.startswith('$'):
 		m_pattern = m_pattern[1:]
 		m_title = en.pluralize(m_title)
 
 	msg = m_pattern.format(title=m_title, city=job['city'])
+	print(msg)
 	return msg
 
 def add_hashtags(message, hashtags):
@@ -247,8 +258,14 @@ def apply_config_selections(config, list_of_jobs):
 	n = config['SELECTION_OPTION']
 	if len(list_of_jobs) > n:
 		n = len(list_of_jobs)
-	for i in range(n):
-		job = random.choice(list_of_jobs)
+	# Append the job title and guid to the final list
+	# Add guid to picked list to prevent double random picks. (09/16)
+	picked = []
+	job = random.choice(list_of_jobs)
+	for i in range(n-1):
+		while job['guid'] in picked:
+			job = random.choice(list_of_jobs)
+			picked.append(job['guid'])
 		final_list['posts'].append("{:<32}: {:>32}".format(job['title'], job['guid']))
 	return final_list
 

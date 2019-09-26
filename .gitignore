@@ -4,6 +4,7 @@ data/token
 token
 cfg.yaml
 tester.py
+data/saved_guids.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
