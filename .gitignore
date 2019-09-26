@@ -5,6 +5,7 @@ token
 cfg.yaml
 tester.py
 data/saved_guids.txt
+bkup.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
