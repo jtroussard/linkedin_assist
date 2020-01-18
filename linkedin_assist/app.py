@@ -13,7 +13,7 @@ import sys
 import helpers as hs
 from classes.LinkedinAssist import LinkedinAssist
 from config import messages
-from config.strings import STRINGS as s
+from config.strings import STRINGS as STR
 
 today = dt.datetime.today()
 
@@ -47,7 +47,7 @@ def main_func():
     keepers = keep_remove["keep"]
 
     # Create a list of GUIDS from which the user can choose from.
-    suggestions = hs.make_suggestions(keepers, it_jobs, FN_RECORDS, LIMITS)
+    suggestions = hs.make_suggestions(keepers, FN_RECORDS, LIMITS)
 
     # Interface with user.
     if len(suggestions) == 0:
@@ -74,7 +74,7 @@ def main_func():
             token_file = open("./data/token")
             token = json.load(token_file)
             linkedin_assist_obj.get_access(token=token)
-            print(s["main_token_present"])
+            print(STR["main_token_present"])
         except IOError:
             print(
                 "[main] Warning: File access error. Reverting to manual authentication."
@@ -114,7 +114,8 @@ def main_func():
                 # For each selection:
                 #  1. Create the base message (from random message bank (templates))
                 #  2. Add hashtags from hashtagbank
-                #  3. edit_language is a catch all method to fix small language bugs for example using UX abbrv. (might move this into the english module.)
+                #  3. edit_language is a catch all method to fix small language bugs for example using UX abbrv.
+                #  (might move this into the english module.)
                 #  4. Create the job request post.
                 #  5. Submit request to POST or print to console.
                 for selection in user_selections["posts"]:
@@ -149,6 +150,6 @@ if __name__ == "__main__":
         main_func()
     except SystemExit:
         pass
-    except:
+    except Exception:
         print("Error:{}".format(sys.exc_info()))
         raise
