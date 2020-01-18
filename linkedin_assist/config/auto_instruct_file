@@ -1,3 +1,0 @@
-MAILTO=username@domain.com
-# m h  dom mon dow   command
-* * * * * . ~/crontab/linkedin_assist/venv/bin/activate && cd ~/linkedin_assist/linkedin_assist/ && python3 ./app.py ./config/cfg.yaml >> ~/crontab/log.txt
