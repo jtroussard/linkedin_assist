@@ -1,0 +1,45 @@
+RUN_TYPE: DEVELOPMENT
+URLS:
+  target_url: https://dollarbankcareers.jobs/feed/json
+  li_api_get_user_profile: https://api.linkedin.com/v2/me
+  li_api_auth_base: https://www.linkedin.com/oauth/v2/authorization
+  li_api_token: https://www.linkedin.com/oauth/v2/accessToken
+  li_api_redirect: http://127.0.0.1
+  li_api_share: https://api.linkedin.com/v2/ugcPosts
+LIMITS:
+  post_age: 90
+  post_count: 15
+FILES:
+  data: ./jobs.json
+  records: ./records.json
+  saved_guids: ./saved_guids.txt
+UI:
+  feedback_options:
+    global_accept:
+      - y
+      - n
+      - yes
+      - no
+KEYWORDS:
+  job_title:
+    - it
+    - programmer
+    - systems
+    - developer
+    - idms
+    - database
+    - cobol
+    - jcl
+    - mainframe
+    - pc
+    - network
+    - middleware
+    - desktop
+    - linux
+    - windows
+    - microsoft
+    - sharepoint
+    - application
+    - digital
+    - ibm
+    - sql
