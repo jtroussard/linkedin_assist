@@ -9,4 +9,4 @@ jobs:
       - name: Show env variables
         run: printenv
       - name: Show cwd and history
-        run: pwd && history | grep echo
+        run: pwd && history
