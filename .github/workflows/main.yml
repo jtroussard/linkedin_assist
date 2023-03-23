@@ -1,0 +1,12 @@
+name: Github Action Tester
+on: workflow_dispatch
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print butthead
+        run: echo "butthead"
+      - name: Show env variables
+        run: printenv
+      - name: Show cwd and history
+        run: pwd && history | grep echo
